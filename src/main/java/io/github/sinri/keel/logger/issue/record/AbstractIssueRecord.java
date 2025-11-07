@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class KeelIssueRecord<T> implements IssueRecordMessageMixin<T>, IssueRecordContextMixin<T> {
+public abstract class AbstractIssueRecord<T> implements KeelIssueRecord<T> {
     private final @Nonnull JsonObject attributes;
     private final @Nonnull List<String> classification;
     private final String threadInfo;
@@ -17,7 +17,7 @@ public abstract class KeelIssueRecord<T> implements IssueRecordMessageMixin<T>, 
     private @Nonnull KeelLogLevel level;
     private @Nullable Throwable exception;
 
-    public KeelIssueRecord() {
+    public AbstractIssueRecord() {
         this.timestamp = System.currentTimeMillis();
         this.attributes = new JsonObject();
         this.level = KeelLogLevel.INFO;
@@ -30,7 +30,7 @@ public abstract class KeelIssueRecord<T> implements IssueRecordMessageMixin<T>, 
     /**
      * @since 4.0.0 for KeelEventLog
      */
-    protected KeelIssueRecord(@Nonnull KeelIssueRecord<?> baseIssueRecord) {
+    protected AbstractIssueRecord(@Nonnull KeelIssueRecord<?> baseIssueRecord) {
         this.attributes = baseIssueRecord.attributes();
         this.classification = baseIssueRecord.classification();
         this.timestamp = baseIssueRecord.timestamp();
@@ -142,6 +142,7 @@ public abstract class KeelIssueRecord<T> implements IssueRecordMessageMixin<T>, 
     /**
      * @since 4.1.0
      */
+    @Override
     public String getThreadInfo() {
         return threadInfo;
     }

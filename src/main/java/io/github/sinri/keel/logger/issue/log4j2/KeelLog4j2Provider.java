@@ -3,6 +3,7 @@ package io.github.sinri.keel.logger.issue.log4j2;
 import io.github.sinri.keel.logger.KeelLogLevel;
 import io.github.sinri.keel.logger.event.KeelEventLog;
 import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenter;
+import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenterBuilder;
 import io.github.sinri.keel.logger.issue.recorder.adapter.KeelIssueRecorderAdapter;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
@@ -73,11 +74,11 @@ public class KeelLog4j2Provider extends Provider {
      *
      * @return a {@link Supplier} that retrieves the
      *         {@link KeelIssueRecorderAdapter} from the
-     *         {@link KeelIssueRecordCenter#outputCenter()}.
+     *         {@link KeelIssueRecordCenterBuilder#outputCenter()}.
      */
     @Nonnull
     protected Supplier<KeelIssueRecorderAdapter> getAdapterSupplier() {
-        return () -> KeelIssueRecordCenter.outputCenter().getAdapter();
+        return () -> KeelIssueRecordCenterBuilder.outputCenter().getAdapter();
     }
 
     @Nullable

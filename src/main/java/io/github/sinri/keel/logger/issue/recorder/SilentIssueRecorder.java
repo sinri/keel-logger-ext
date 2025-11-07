@@ -2,6 +2,7 @@ package io.github.sinri.keel.logger.issue.recorder;
 
 import io.github.sinri.keel.logger.KeelLogLevel;
 import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenter;
+import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenterBuilder;
 import io.github.sinri.keel.logger.issue.record.KeelIssueRecord;
 import io.vertx.core.Handler;
 
@@ -31,7 +32,7 @@ public final class SilentIssueRecorder<T extends KeelIssueRecord<T>> implements 
     @Nonnull
     @Override
     public KeelIssueRecordCenter issueRecordCenter() {
-        return KeelIssueRecordCenter.silentCenter();
+        return KeelIssueRecordCenterBuilder.silentCenter();
     }
 
     @Nonnull

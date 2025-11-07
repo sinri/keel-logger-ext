@@ -2,6 +2,7 @@ package io.github.sinri.keel.logger.issue.recorder.adapter;
 
 import io.github.sinri.keel.logger.issue.record.KeelIssueRecord;
 import io.github.sinri.keel.logger.issue.recorder.render.KeelIssueRecordRender;
+import io.github.sinri.keel.logger.issue.recorder.render.KeelIssueRecordRenderBuilder;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 
@@ -32,7 +33,7 @@ public class AsyncStdoutAdapter implements KeelIssueRecorderAdapter {
 
     @Override
     public KeelIssueRecordRender<String> issueRecordRender() {
-        return KeelIssueRecordRender.renderForString();
+        return KeelIssueRecordRenderBuilder.renderForString();
     }
 
     @Override
@@ -66,15 +67,8 @@ public class AsyncStdoutAdapter implements KeelIssueRecorderAdapter {
     }
 
     /**
-     * @since 4.0.0
-     */
-    private static class WrappedIssueRecord {
-        public final KeelIssueRecord<?> issueRecord;
-        public final String topic;
-
-        private WrappedIssueRecord(String topic, KeelIssueRecord<?> issueRecord) {
-            this.issueRecord = issueRecord;
-            this.topic = topic;
-        }
+         * @since 4.0.0
+         */
+        private record WrappedIssueRecord(String topic, KeelIssueRecord<?> issueRecord) {
     }
 }

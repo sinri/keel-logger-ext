@@ -1,7 +1,7 @@
 package io.github.sinri.keel.logger.issue.slf4j;
 
 import io.github.sinri.keel.logger.event.KeelEventLog;
-import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenter;
+import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenterBuilder;
 import io.github.sinri.keel.logger.issue.recorder.adapter.KeelIssueRecorderAdapter;
 import io.vertx.core.Handler;
 import org.slf4j.IMarkerFactory;
@@ -141,7 +141,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      */
     @Nonnull
     protected Supplier<KeelIssueRecorderAdapter> getAdapterSupplier() {
-        return () -> KeelIssueRecordCenter.outputCenter().getAdapter();
+        return () -> KeelIssueRecordCenterBuilder.outputCenter().getAdapter();
     }
 
     @Nullable

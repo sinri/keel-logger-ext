@@ -12,17 +12,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-abstract public class KeelMetricRecorder implements Closeable {
+abstract public class AbstractMetricRecorder implements Closeable {
     private final AtomicBoolean endSwitch = new AtomicBoolean(false);
-    private final Queue<KeelMetricRecord> metricRecordQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<KeelMetricRecord<?>> metricRecordQueue = new ConcurrentLinkedQueue<>();
 
     private final Vertx vertx;
 
-    public KeelMetricRecorder(Vertx vertx) {
+    public AbstractMetricRecorder(Vertx vertx) {
         this.vertx = vertx;
     }
 
-    public void recordMetric(KeelMetricRecord metricRecord) {
+    public void recordMetric(KeelMetricRecord<?> metricRecord) {
         this.metricRecordQueue.add(metricRecord);
     }
 
@@ -42,10 +42,10 @@ abstract public class KeelMetricRecorder implements Closeable {
     public void start() {
         Future.succeededFuture()
               .compose(v -> {
-                  List<KeelMetricRecord> buffer = new ArrayList<>();
+                  List<KeelMetricRecord<?>> buffer = new ArrayList<>();
 
                   while (true) {
-                      KeelMetricRecord metricRecord = metricRecordQueue.poll();
+                      KeelMetricRecord<?> metricRecord = metricRecordQueue.poll();
                       if (metricRecord == null) break;
 
                       buffer.add(metricRecord);
@@ -83,5 +83,5 @@ abstract public class KeelMetricRecorder implements Closeable {
         endSwitch.set(true);
     }
 
-    abstract protected Future<Void> handleForTopic(String topic, List<KeelMetricRecord> buffer);
+    abstract protected Future<Void> handleForTopic(String topic, List<KeelMetricRecord<?>> buffer);
 }

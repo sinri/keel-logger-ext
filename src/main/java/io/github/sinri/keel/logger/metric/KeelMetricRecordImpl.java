@@ -1,6 +1,6 @@
 package io.github.sinri.keel.logger.metric;
 
-import io.github.sinri.keel.logger.issue.record.KeelIssueRecord;
+import io.github.sinri.keel.logger.issue.record.AbstractIssueRecord;
 import io.vertx.core.json.JsonObject;
 
 import javax.annotation.Nonnull;
@@ -10,19 +10,21 @@ import java.util.Map;
 /**
  * @since 3.1.9 Technical Preview
  * @since 3.2.0 extends BaseIssueRecord
- * It is allowed to override this class, for fixed topic and metric.
+ *         It is allowed to override this class, for fixed topic and metric.
  */
-public class KeelMetricRecord extends KeelIssueRecord<KeelMetricRecord> {
+public class KeelMetricRecordImpl extends AbstractIssueRecord<KeelMetricRecordImpl> implements KeelMetricRecord<KeelMetricRecordImpl> {
     private final @Nonnull Map<String, String> labelMap = new HashMap<>();
     private final @Nonnull String metricName;
     private final double value;
 
-    public KeelMetricRecord(@Nonnull String metricName, double value) {
+    public KeelMetricRecordImpl(@Nonnull String metricName, double value) {
         super();
         this.metricName = metricName;
         this.value = value;
     }
 
+    @Nonnull
+    @Override
     public JsonObject toJsonObject() {
         JsonObject labelObject = new JsonObject();
         labelMap.forEach(labelObject::put);
@@ -34,27 +36,42 @@ public class KeelMetricRecord extends KeelIssueRecord<KeelMetricRecord> {
     }
 
 
+    @Override
     @Nonnull
     public String metricName() {
         return metricName;
     }
 
+    @Override
     public double value() {
         return value;
     }
 
+    @Override
+    @Nonnull
     public Map<String, String> labels() {
         return labelMap;
     }
 
-    public KeelMetricRecord label(String name, String value) {
+    @Override
+    public KeelMetricRecordImpl label(String name, String value) {
         this.labelMap.put(name, value);
         return this;
     }
 
     @Nonnull
     @Override
-    public KeelMetricRecord getImplementation() {
+    public KeelMetricRecordImpl getImplementation() {
         return this;
+    }
+
+    @Override
+    public String toJsonExpression() {
+        return toJsonObject().encode();
+    }
+
+    @Override
+    public String toFormattedJsonExpression() {
+        return toJsonObject().encodePrettily();
     }
 }

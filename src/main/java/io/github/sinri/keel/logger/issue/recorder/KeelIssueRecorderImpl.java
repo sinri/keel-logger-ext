@@ -18,6 +18,9 @@ class KeelIssueRecorderImpl<T extends KeelIssueRecord<T>> implements KeelIssueRe
     protected final @Nonnull Supplier<T> issueRecordBuilder;
     private final @Nonnull KeelIssueRecordCenter issueRecordCenter;
     private final @Nonnull String topic;
+    private final List<KeelIssueRecorder<T>> bypassIssueRecorders = new ArrayList<>();
+    @Nullable
+    Handler<T> recordFormatter = null;
     private KeelLogLevel visibleLevel = KeelLogLevel.INFO;
 
     public KeelIssueRecorderImpl(
@@ -55,10 +58,6 @@ class KeelIssueRecorderImpl<T extends KeelIssueRecord<T>> implements KeelIssueRe
     public Supplier<T> issueRecordBuilder() {
         return issueRecordBuilder;
     }
-
-    private final List<KeelIssueRecorder<T>> bypassIssueRecorders = new ArrayList<>();
-    @Nullable
-    Handler<T> recordFormatter = null;
 
     /**
      * @since 3.2.0
