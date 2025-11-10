@@ -1,6 +1,8 @@
 package io.github.sinri.keel.logger.metric;
 
-import io.github.sinri.keel.logger.issue.record.AbstractIssueRecord;
+import io.github.sinri.keel.core.json.JsonObjectConvertible;
+import io.github.sinri.keel.logger.api.issue.IssueRecord;
+import io.github.sinri.keel.logger.api.metric.MetricRecord;
 import io.vertx.core.json.JsonObject;
 
 import javax.annotation.Nonnull;
@@ -12,12 +14,13 @@ import java.util.Map;
  * @since 3.2.0 extends BaseIssueRecord
  *         It is allowed to override this class, for fixed topic and metric.
  */
-public class KeelMetricRecordImpl extends AbstractIssueRecord<KeelMetricRecordImpl> implements KeelMetricRecord<KeelMetricRecordImpl> {
+public class MetricRecordImpl extends IssueRecord<MetricRecordImpl>
+        implements MetricRecord<MetricRecordImpl>, JsonObjectConvertible {
     private final @Nonnull Map<String, String> labelMap = new HashMap<>();
     private final @Nonnull String metricName;
     private final double value;
 
-    public KeelMetricRecordImpl(@Nonnull String metricName, double value) {
+    public MetricRecordImpl(@Nonnull String metricName, double value) {
         super();
         this.metricName = metricName;
         this.value = value;
@@ -54,14 +57,14 @@ public class KeelMetricRecordImpl extends AbstractIssueRecord<KeelMetricRecordIm
     }
 
     @Override
-    public KeelMetricRecordImpl label(String name, String value) {
+    public MetricRecordImpl label(String name, String value) {
         this.labelMap.put(name, value);
         return this;
     }
 
     @Nonnull
     @Override
-    public KeelMetricRecordImpl getImplementation() {
+    public MetricRecordImpl getImplementation() {
         return this;
     }
 

@@ -1,7 +1,7 @@
 package io.github.sinri.keel.logger.impl;
 
+import io.github.sinri.keel.logger.api.GenericLoggerFactory;
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.LoggerFactory;
 import io.github.sinri.keel.logger.api.event.EventRecorder;
 import io.github.sinri.keel.logger.api.issue.IssueRecord;
 import io.github.sinri.keel.logger.api.issue.IssueRecorder;
@@ -12,7 +12,7 @@ import io.github.sinri.keel.logger.impl.issue.plain.PlainIssueRecorder;
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public class LocalLoggerFactory implements LoggerFactory<String> {
+public class LocalLoggerFactory implements GenericLoggerFactory<String> {
 
     @Override
     public LogRecorder<String> createLogRecorder(@Nonnull String topic) {

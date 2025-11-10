@@ -1,12 +1,9 @@
 package io.github.sinri.keel.logger.log4j2;
 
-import io.github.sinri.keel.logger.KeelLogLevel;
 import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.Adapter;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.github.sinri.keel.logger.impl.event.PlainEventAdapter;
-import io.github.sinri.keel.logger.issue.center.KeelIssueRecordCenter;
-import io.github.sinri.keel.logger.issue.recorder.adapter.KeelIssueRecorderAdapter;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.apache.logging.log4j.spi.Provider;
@@ -58,7 +55,7 @@ public class KeelLog4j2Provider extends Provider {
      * Override this method to customize the minimum log level that will be
      * processed.
      *
-     * @return the minimum {@link KeelLogLevel} that will be processed
+     * @return the minimum {@link LogLevel} that will be processed
      */
     @Nonnull
     protected LogLevel getVisibleBaseLevel() {
@@ -66,12 +63,10 @@ public class KeelLog4j2Provider extends Provider {
     }
 
     /**
-     * Provides a {@link Supplier} that supplies the
-     * {@link KeelIssueRecorderAdapter} instance
-     * associated with the output center of the {@link KeelIssueRecordCenter}.
+     * Provides a {@link Supplier} that supplies the {@link Adapter} instance.
      *
      * <p>
-     * Override this method to use another {@link KeelIssueRecorderAdapter} to
+     * Override this method to use another {@link Adapter} to
      * record issues.
      *
      * @return the adapter supplier

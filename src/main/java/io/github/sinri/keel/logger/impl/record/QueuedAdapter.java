@@ -9,7 +9,12 @@ import io.github.sinri.keel.logger.impl.writer.QueuedLogWriter;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public record QueuedAdapter<R>(Render<LogRecord, R> render, LogWriter<R> writer) implements Adapter<LogRecord, R> {
+public class QueuedAdapter<R> implements Adapter<LogRecord, R> {
+    @Nonnull
+    private final Render<LogRecord, R> render;
+    @Nonnull
+    private final QueuedLogWriter<R> writer;
+
     public QueuedAdapter(@Nonnull Render<LogRecord, R> render, @Nonnull QueuedLogWriter<R> writer) {
         this.render = render;
         this.writer = writer;

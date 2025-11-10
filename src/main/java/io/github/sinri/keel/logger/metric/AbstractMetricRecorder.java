@@ -1,5 +1,6 @@
 package io.github.sinri.keel.logger.metric;
 
+import io.github.sinri.keel.logger.api.metric.MetricRecord;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract public class AbstractMetricRecorder implements Closeable {
     private final AtomicBoolean endSwitch = new AtomicBoolean(false);
-    private final Queue<KeelMetricRecord<?>> metricRecordQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<MetricRecord<?>> metricRecordQueue = new ConcurrentLinkedQueue<>();
 
     private final Vertx vertx;
 
@@ -22,7 +23,7 @@ abstract public class AbstractMetricRecorder implements Closeable {
         this.vertx = vertx;
     }
 
-    public void recordMetric(KeelMetricRecord<?> metricRecord) {
+    public void recordMetric(MetricRecord<?> metricRecord) {
         this.metricRecordQueue.add(metricRecord);
     }
 
@@ -42,10 +43,10 @@ abstract public class AbstractMetricRecorder implements Closeable {
     public void start() {
         Future.succeededFuture()
               .compose(v -> {
-                  List<KeelMetricRecord<?>> buffer = new ArrayList<>();
+                  List<MetricRecord<?>> buffer = new ArrayList<>();
 
                   while (true) {
-                      KeelMetricRecord<?> metricRecord = metricRecordQueue.poll();
+                      MetricRecord<?> metricRecord = metricRecordQueue.poll();
                       if (metricRecord == null) break;
 
                       buffer.add(metricRecord);
@@ -83,5 +84,5 @@ abstract public class AbstractMetricRecorder implements Closeable {
         endSwitch.set(true);
     }
 
-    abstract protected Future<Void> handleForTopic(String topic, List<KeelMetricRecord<?>> buffer);
+    abstract protected Future<Void> handleForTopic(String topic, List<MetricRecord<?>> buffer);
 }
