@@ -4,10 +4,8 @@ import io.github.sinri.keel.logger.api.record.LogRecord;
 import io.github.sinri.keel.logger.api.record.LogRecorder;
 
 import javax.annotation.Nonnull;
-import java.io.Closeable;
-import java.io.IOException;
 
-public abstract class QueuedLogRecorder implements LogRecorder, Closeable {
+public abstract class QueuedLogRecorder implements LogRecorder {
     @Nonnull
     private final String topic;
 
@@ -27,11 +25,6 @@ public abstract class QueuedLogRecorder implements LogRecorder, Closeable {
     @Override
     public final void recordLog(@Nonnull LogRecord record) {
         this.writer().write(topic, record);
-    }
-
-    @Override
-    public void close() throws IOException {
-        this.writer().close();
     }
 
 }

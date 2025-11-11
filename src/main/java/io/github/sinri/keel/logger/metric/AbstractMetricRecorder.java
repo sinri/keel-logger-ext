@@ -5,6 +5,7 @@ import io.github.sinri.keel.logger.api.metric.MetricRecord;
 import io.github.sinri.keel.logger.api.metric.MetricRecorder;
 import io.vertx.core.Future;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static io.github.sinri.keel.facade.KeelInstance.Keel;
 
 
-abstract public class AbstractMetricRecorder extends KeelVerticleImpl implements MetricRecorder {
+abstract public class AbstractMetricRecorder extends KeelVerticleImpl implements MetricRecorder, Closeable {
     private final AtomicBoolean endSwitch = new AtomicBoolean(false);
     private final Queue<MetricRecord> metricRecordQueue = new ConcurrentLinkedQueue<>();
 
