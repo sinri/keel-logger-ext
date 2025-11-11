@@ -3,7 +3,6 @@ package io.github.sinri.keel.logger.metric;
 import io.github.sinri.keel.logger.api.metric.MetricRecord;
 import io.github.sinri.keel.logger.api.metric.MetricRecorder;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,18 +11,17 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static io.github.sinri.keel.facade.KeelInstance.Keel;
+
 
 abstract public class AbstractMetricRecorder implements MetricRecorder {
     private final AtomicBoolean endSwitch = new AtomicBoolean(false);
-    private final Queue<MetricRecord<?>> metricRecordQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<MetricRecord> metricRecordQueue = new ConcurrentLinkedQueue<>();
 
-    private final Vertx vertx;
-
-    public AbstractMetricRecorder(Vertx vertx) {
-        this.vertx = vertx;
+    public AbstractMetricRecorder() {
     }
 
-    public void recordMetric(MetricRecord<?> metricRecord) {
+    public void recordMetric(MetricRecord metricRecord) {
         this.metricRecordQueue.add(metricRecord);
     }
 
@@ -43,10 +41,10 @@ abstract public class AbstractMetricRecorder implements MetricRecorder {
     public void start() {
         Future.succeededFuture()
               .compose(v -> {
-                  List<MetricRecord<?>> buffer = new ArrayList<>();
+                  List<MetricRecord> buffer = new ArrayList<>();
 
                   while (true) {
-                      MetricRecord<?> metricRecord = metricRecordQueue.poll();
+                      MetricRecord metricRecord = metricRecordQueue.poll();
                       if (metricRecord == null) break;
 
                       buffer.add(metricRecord);
@@ -61,7 +59,7 @@ abstract public class AbstractMetricRecorder implements MetricRecorder {
               })
               .andThen(ar -> {
                   if (!endSwitch.get()) {
-                      vertx.setTimer(1000L, id -> start());
+                      Keel.getVertx().setTimer(1000L, id -> start());
                   }
               });
     }
@@ -84,5 +82,5 @@ abstract public class AbstractMetricRecorder implements MetricRecorder {
         endSwitch.set(true);
     }
 
-    abstract protected Future<Void> handleForTopic(String topic, List<MetricRecord<?>> buffer);
+    abstract protected Future<Void> handleForTopic(String topic, List<MetricRecord> buffer);
 }

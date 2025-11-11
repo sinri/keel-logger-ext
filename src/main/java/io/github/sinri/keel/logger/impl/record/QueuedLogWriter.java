@@ -43,37 +43,40 @@ public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements Log
     @Override
     protected Future<Void> startVerticle() {
         Keel.asyncCallRepeatedly(repeatedlyCallTask -> {
-            Set<String> topics = this.queueMap.keySet();
-            AtomicInteger counter = new AtomicInteger(0);
-            return Keel.asyncCallIteratively(topics, topic -> {
-                           Queue<R> queue = this.queueMap.get(topic);
-                           List<R> bufferOfTopic = new ArrayList<>();
-                           while (true) {
-                               R r = queue.poll();
-                               if (r == null) break;
-                               bufferOfTopic.add(r);
-                               counter.incrementAndGet();
-                               if (bufferOfTopic.size() >= this.bufferSize()) {
-                                   break;
+                Set<String> topics = this.queueMap.keySet();
+                AtomicInteger counter = new AtomicInteger(0);
+                return Keel.asyncCallIteratively(topics, topic -> {
+                               Queue<R> queue = this.queueMap.get(topic);
+                               List<R> bufferOfTopic = new ArrayList<>();
+                               while (true) {
+                                   R r = queue.poll();
+                                   if (r == null) break;
+                                   bufferOfTopic.add(r);
+                                   counter.incrementAndGet();
+                                   if (bufferOfTopic.size() >= this.bufferSize()) {
+                                       break;
+                                   }
                                }
-                           }
 
-                           if (bufferOfTopic.isEmpty()) return Future.succeededFuture();
+                               if (bufferOfTopic.isEmpty()) return Future.succeededFuture();
 
-                           return processLogRecords(topic, bufferOfTopic);
-                       })
-                       .eventually(() -> {
-                           if (counter.get() == 0) {
-                               if (closeFlag.get()) {
-                                   repeatedlyCallTask.stop();
+                               return processLogRecords(topic, bufferOfTopic);
+                           })
+                           .eventually(() -> {
+                               if (counter.get() == 0) {
+                                   if (closeFlag.get()) {
+                                       repeatedlyCallTask.stop();
+                                       return Future.succeededFuture();
+                                   }
+                                   return Keel.asyncSleep(100L);
+                               } else {
                                    return Future.succeededFuture();
                                }
-                               return Keel.asyncSleep(100L);
-                           } else {
-                               return Future.succeededFuture();
-                           }
-                       });
-        });
+                           });
+            })
+            .onComplete(ar -> {
+                this.undeployMe();
+            });
         return Future.succeededFuture();
     }
 
