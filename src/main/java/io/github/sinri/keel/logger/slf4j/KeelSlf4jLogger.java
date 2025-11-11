@@ -358,7 +358,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void debug(Marker marker, String msg) {
         record(log -> {
             log.level(LogLevel.DEBUG);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
         });
     }
@@ -374,7 +374,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void debug(Marker marker, String format, Object arg) {
         record(log -> {
             log.level(LogLevel.DEBUG);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg}).getMessage());
         });
     }
@@ -391,7 +391,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void debug(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
             log.level(LogLevel.DEBUG);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg1, arg2}).getMessage());
         });
     }
@@ -407,7 +407,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void debug(Marker marker, String format, Object... arguments) {
         record(log -> {
             log.level(LogLevel.DEBUG);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, arguments).getMessage());
         });
     }
@@ -423,7 +423,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void debug(Marker marker, String msg, Throwable t) {
         record(log -> {
             log.level(LogLevel.DEBUG);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
             log.exception(t);
         });
@@ -551,7 +551,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void info(Marker marker, String msg) {
         record(log -> {
             log.level(LogLevel.INFO);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
         });
     }
@@ -567,7 +567,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void info(Marker marker, String format, Object arg) {
         record(log -> {
             log.level(LogLevel.INFO);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg}).getMessage());
         });
     }
@@ -584,7 +584,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void info(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
             log.level(LogLevel.INFO);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg1, arg2}).getMessage());
         });
     }
@@ -600,7 +600,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void info(Marker marker, String format, Object... arguments) {
         record(log -> {
             log.level(LogLevel.INFO);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, arguments).getMessage());
         });
     }
@@ -616,7 +616,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void info(Marker marker, String msg, Throwable t) {
         record(log -> {
             log.level(LogLevel.INFO);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
             log.exception(t);
         });
@@ -724,7 +724,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void warn(Marker marker, String msg) {
         record(log -> {
             log.level(LogLevel.WARNING);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
         });
     }
@@ -740,7 +740,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void warn(Marker marker, String format, Object arg) {
         record(log -> {
             log.level(LogLevel.WARNING);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg}).getMessage());
         });
     }
@@ -757,7 +757,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void warn(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
             log.level(LogLevel.WARNING);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg1, arg2}).getMessage());
         });
     }
@@ -773,7 +773,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void warn(Marker marker, String format, Object... arguments) {
         record(log -> {
             log.level(LogLevel.WARNING);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, arguments).getMessage());
         });
     }
@@ -789,7 +789,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void warn(Marker marker, String msg, Throwable t) {
         record(log -> {
             log.level(LogLevel.WARNING);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
             log.exception(t);
         });
@@ -897,7 +897,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void error(Marker marker, String msg) {
         record(log -> {
             log.level(LogLevel.ERROR);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
         });
     }
@@ -913,7 +913,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void error(Marker marker, String format, Object arg) {
         record(log -> {
             log.level(LogLevel.ERROR);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg}).getMessage());
         });
     }
@@ -930,7 +930,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void error(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
             log.level(LogLevel.ERROR);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, new Object[]{arg1, arg2}).getMessage());
         });
     }
@@ -946,7 +946,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void error(Marker marker, String format, Object... arguments) {
         record(log -> {
             log.level(LogLevel.ERROR);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(MessageFormatter.arrayFormat(format, arguments).getMessage());
         });
     }
@@ -962,7 +962,7 @@ public final class KeelSlf4jLogger implements Logger {
     public void error(Marker marker, String msg, Throwable t) {
         record(log -> {
             log.level(LogLevel.ERROR);
-            //log.classification(transformMarkerToClassification(marker));
+            log.classification(transformMarkerToClassification(marker));
             log.message(msg);
             log.exception(t);
         });

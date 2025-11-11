@@ -6,6 +6,7 @@ import io.github.sinri.keel.utils.StackUtils;
 import io.github.sinri.keel.utils.time.TimeUtils;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
 
 import static io.github.sinri.keel.utils.time.TimeUtils.MYSQL_DATETIME_MS_PATTERN;
@@ -33,6 +34,12 @@ public class StringEventRender implements EventRender<String> {
         s.append(" [").append(loggingEntity.level().name()).append("]");
         s.append(" ").append(topic);
         s.append(" on ").append(loggingEntity.threadInfo());
+
+        List<String> classification = loggingEntity.classification();
+        if (classification != null && !classification.isEmpty()) {
+            s.append("\n @ ").append(String.join("∷", classification));
+        }
+
         Map<String, Object> map = loggingEntity.context().toMap();
         if (!map.isEmpty()) {
             map.forEach((k, v) -> s.append("\n ▪ ").append(k).append(": ").append(v));
