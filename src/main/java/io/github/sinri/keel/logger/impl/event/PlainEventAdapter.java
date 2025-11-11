@@ -30,8 +30,4 @@ public class PlainEventAdapter implements Adapter<EventRecord, String> {
         return StdoutStringWriter.getInstance();
     }
 
-    @Override
-    public void close() {
-
-    }
 }
