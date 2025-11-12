@@ -1,22 +1,13 @@
 package io.github.sinri.keel.logger.event;
 
-import io.github.sinri.keel.logger.adapter.adapter.EventForStdoutAdapter;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
-import io.github.sinri.keel.logger.api.event.EventRecord;
+import io.github.sinri.keel.logger.base.event.BaseEventRecorder;
+import io.github.sinri.keel.logger.consumer.StdoutTopicRecordConsumer;
 
 import javax.annotation.Nonnull;
 
-public class StdoutEventRecorder extends AbstractEventRecorder<String> {
-    private final Adapter<EventRecord, String> adapter;
+public final class StdoutEventRecorder extends BaseEventRecorder {
 
-    public StdoutEventRecorder(String topic) {
-        super(topic);
-        this.adapter = EventForStdoutAdapter.getInstance();
-    }
-
-    @Nonnull
-    @Override
-    public Adapter<EventRecord, String> adapter() {
-        return adapter;
+    public StdoutEventRecorder(@Nonnull String topic) {
+        super(topic, new StdoutTopicRecordConsumer());
     }
 }

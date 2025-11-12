@@ -1,7 +1,7 @@
 package io.github.sinri.keel.logger.slf4j;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
+import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public final class KeelSlf4jLogger implements Logger {
      * This allows for lazy initialization and dynamic adapter switching.
      */
     @Nonnull
-    private final Supplier<Adapter<EventRecord, String>> adapterSupplier;
+    private final Supplier<TopicRecordConsumer> adapterSupplier;
 
     /**
      * The topic/name of this logger instance, typically representing the class or component being logged.
@@ -50,7 +50,7 @@ public final class KeelSlf4jLogger implements Logger {
      * @param topic            the name/topic of this logger instance
      */
     KeelSlf4jLogger(
-            @Nonnull Supplier<Adapter<EventRecord, String>> adapterSupplier,
+            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
             @Nonnull LogLevel visibleBaseLevel,
             @Nonnull String topic,
             @Nullable Handler<EventRecord> issueRecordInitializer
@@ -102,7 +102,7 @@ public final class KeelSlf4jLogger implements Logger {
         if (issue.level().isEnoughSeriousAs(getVisibleBaseLevel())) {
             var adapter = adapterSupplier.get();
             if (adapter != null) {
-                adapter.renderAndWrite(getName(), issue);
+                adapter.accept(getName(), issue);
             }
         }
     }

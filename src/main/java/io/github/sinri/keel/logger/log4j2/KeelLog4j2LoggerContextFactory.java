@@ -1,7 +1,7 @@
 package io.github.sinri.keel.logger.log4j2;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
+import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.spi.LoggerContext;
@@ -17,7 +17,7 @@ public final class KeelLog4j2LoggerContextFactory implements LoggerContextFactor
     private final KeelLog4j2LoggerContext loggerContext;
 
     public KeelLog4j2LoggerContextFactory(
-            @Nonnull Supplier<Adapter<EventRecord, String>> adapterSupplier,
+            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
             @Nonnull LogLevel visibleBaseLevel,
             @Nullable Handler<EventRecord> issueRecordInitializer
     ) {

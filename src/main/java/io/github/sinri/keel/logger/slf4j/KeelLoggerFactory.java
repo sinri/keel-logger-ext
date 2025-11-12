@@ -1,7 +1,7 @@
 package io.github.sinri.keel.logger.slf4j;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
+import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
 import org.slf4j.ILoggerFactory;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * that bridge SLF4J logging calls to the Keel issue recording system. The factory uses a caching mechanism to
  * ensure that multiple requests for the same logger name return the same logger instance.
  * <p>
- * The factory is configured with a {@link Adapter<EventRecord,String>} supplier that provides the underlying
+ * The factory is configured with a {@link TopicRecordConsumer} supplier that provides the underlying
  * logging infrastructure. This allows for flexible configuration and lazy initialization of the logging backend.
  * <p>
  * <strong>Thread Safety:</strong> This factory is thread-safe. Logger creation is synchronized to prevent
@@ -37,21 +37,20 @@ import java.util.function.Supplier;
  * }</pre>
  *
  * @see KeelSlf4jLogger
- * @see Adapter
  * @see ILoggerFactory
  * @since 4.1.1
  */
 public final class KeelLoggerFactory implements ILoggerFactory {
 
     /**
-     * Supplier for obtaining the {@link Adapter<EventRecord,String>} instance used by created loggers.
+     * Supplier for obtaining the {@link TopicRecordConsumer} instance used by created loggers.
      * <p>
      * This supplier allows for lazy initialization and dynamic configuration of the logging backend.
      * The same supplier instance is shared among all loggers created by this factory, enabling
      * consistent logging behavior across the application.
      */
     @Nonnull
-    private final Supplier<Adapter<EventRecord, String>> adapterSupplier;
+    private final Supplier<TopicRecordConsumer> adapterSupplier;
     @Nullable
     private final Handler<EventRecord> issueRecordInitializer;
 
@@ -67,7 +66,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
     /**
      * Constructs a new KeelLoggerFactory with the specified adapter supplier.
      * <p>
-     * The adapter supplier will be used to obtain {@link Adapter<EventRecord,String>} instances
+     * The adapter supplier will be used to obtain {@link TopicRecordConsumer} instances
      * for all loggers created by this factory. The supplier should return a consistent
      * adapter instance or instances with compatible configuration.
      *
@@ -76,7 +75,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
      * @throws NullPointerException if adapterSupplier is null
      */
     public KeelLoggerFactory(
-            @Nonnull Supplier<Adapter<EventRecord, String>> adapterSupplier,
+            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
             @Nullable Handler<EventRecord> issueRecordInitializer) {
         this.adapterSupplier = adapterSupplier;
         this.issueRecordInitializer = issueRecordInitializer;

@@ -1,7 +1,7 @@
 package io.github.sinri.keel.logger.log4j2;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
+import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.Level;
@@ -15,14 +15,14 @@ import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public final class KeelLog4j2Logger extends AbstractLogger {
-    private final Supplier<Adapter<EventRecord, String>> adapterSupplier;
+    private final Supplier<TopicRecordConsumer> adapterSupplier;
     private final String topic;
     private final LogLevel visibleBaseLevel;
     @Nullable
     private final Handler<EventRecord> issueRecordInitializer;
 
     public KeelLog4j2Logger(
-            @Nonnull Supplier<Adapter<EventRecord, String>> adapterSupplier,
+            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
             @Nonnull LogLevel visibleBaseLevel,
             @Nonnull String topic,
             @Nullable Handler<EventRecord> issueRecordInitializer) {
@@ -158,7 +158,7 @@ public final class KeelLog4j2Logger extends AbstractLogger {
 
     @Override
     public void logMessage(String fqcn, Level level, Marker marker, Message message, Throwable t) {
-        Adapter<EventRecord, String> adapter = this.adapterSupplier.get();
+        TopicRecordConsumer adapter = this.adapterSupplier.get();
         if (adapter == null) return;
 
         EventRecord keelEventLog = new EventRecord();
@@ -175,7 +175,7 @@ public final class KeelLog4j2Logger extends AbstractLogger {
         // 添加线程上下文信息到日志事件
         addThreadContextToLog(keelEventLog);
 
-        adapter.renderAndWrite(topic, keelEventLog);
+        adapter.accept(topic, keelEventLog);
     }
 
     /**

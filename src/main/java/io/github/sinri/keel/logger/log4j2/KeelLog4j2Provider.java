@@ -1,8 +1,7 @@
 package io.github.sinri.keel.logger.log4j2;
 
-import io.github.sinri.keel.logger.adapter.adapter.EventForStdoutAdapter;
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
+import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
@@ -11,6 +10,8 @@ import org.apache.logging.log4j.spi.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
+
+import static io.github.sinri.keel.facade.KeelInstance.Keel;
 
 public class KeelLog4j2Provider extends Provider {
     public static final int DEFAULT_PRIORITY = 50;
@@ -63,17 +64,17 @@ public class KeelLog4j2Provider extends Provider {
     }
 
     /**
-     * Provides a {@link Supplier} that supplies the {@link Adapter} instance.
+     * Provides a {@link Supplier} that supplies the {@link TopicRecordConsumer} instance.
      *
      * <p>
-     * Override this method to use another {@link Adapter} to
+     * Override this method to use another {@link TopicRecordConsumer} to
      * record issues.
      *
      * @return the adapter supplier
      */
     @Nonnull
-    protected Supplier<Adapter<EventRecord, String>> getAdapterSupplier() {
-        return EventForStdoutAdapter::getInstance;
+    protected Supplier<TopicRecordConsumer> getAdapterSupplier() {
+        return () -> Keel.getRecorderFactory().sharedTopicRecordConsumer();
     }
 
     @Nullable

@@ -1,10 +1,12 @@
-package io.github.sinri.keel.logger.adapter.writer;
+package io.github.sinri.keel.logger.consumer;
 
 import io.github.sinri.keel.base.verticles.KeelVerticleImpl;
-import io.github.sinri.keel.logger.api.adapter.PersistentLogWriter;
+import io.github.sinri.keel.logger.api.consumer.PersistentTopicRecordConsumer;
+import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Future;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.SynchronousQueue;
@@ -13,11 +15,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.sinri.keel.facade.KeelInstance.Keel;
 
-public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements PersistentLogWriter<R> {
-    private final Map<String, Queue<R>> queueMap = new ConcurrentHashMap<>();
+public abstract class QueuedTopicRecordConsumer extends KeelVerticleImpl implements PersistentTopicRecordConsumer {
+    private final Map<String, Queue<EventRecord>> queueMap = new ConcurrentHashMap<>();
     private final AtomicBoolean closeFlag = new AtomicBoolean(false);
 
-    public QueuedLogWriter() {
+    public QueuedTopicRecordConsumer() {
+
     }
 
     protected int bufferSize() {
@@ -25,19 +28,7 @@ public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements Per
     }
 
     @Nonnull
-    abstract protected Future<Void> processLogRecords(@Nonnull String topic, @Nonnull List<R> batch);
-
-    @Override
-    public void write(@Nonnull String topic, @Nonnull R renderedEntity) {
-        this.queueMap.computeIfAbsent(topic, k -> new SynchronousQueue<>())
-                     .add(renderedEntity);
-    }
-
-    @Override
-    public void writeBatch(@Nonnull String topic, @Nonnull List<R> renderedEntities) {
-        this.queueMap.computeIfAbsent(topic, k -> new SynchronousQueue<>())
-                     .addAll(renderedEntities);
-    }
+    abstract protected Future<Void> processLogRecords(@Nonnull String topic, @Nonnull List<EventRecord> batch);
 
     @Override
     protected Future<Void> startVerticle() {
@@ -45,10 +36,10 @@ public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements Per
                 Set<String> topics = this.queueMap.keySet();
                 AtomicInteger counter = new AtomicInteger(0);
                 return Keel.asyncCallIteratively(topics, topic -> {
-                               Queue<R> queue = this.queueMap.get(topic);
-                               List<R> bufferOfTopic = new ArrayList<>();
+                               Queue<EventRecord> queue = this.queueMap.get(topic);
+                               List<EventRecord> bufferOfTopic = new ArrayList<>();
                                while (true) {
-                                   R r = queue.poll();
+                                   EventRecord r = queue.poll();
                                    if (r == null) break;
                                    bufferOfTopic.add(r);
                                    counter.incrementAndGet();
@@ -80,7 +71,13 @@ public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements Per
     }
 
     @Override
-    public void close() {
-        this.closeFlag.set(true);
+    public void accept(@Nonnull String topic, @Nonnull EventRecord loggingEntity) {
+        this.queueMap.computeIfAbsent(topic, k -> new SynchronousQueue<>())
+                     .add(loggingEntity);
+    }
+
+    @Override
+    public void close() throws IOException {
+        closeFlag.set(true);
     }
 }

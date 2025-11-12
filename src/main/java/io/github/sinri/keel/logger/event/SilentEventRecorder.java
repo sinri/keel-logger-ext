@@ -1,13 +1,17 @@
 package io.github.sinri.keel.logger.event;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.adapter.Adapter;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.github.sinri.keel.logger.api.event.EventRecorder;
+import io.github.sinri.keel.logger.base.event.BaseEventRecorder;
 
 import javax.annotation.Nonnull;
 
-public class SilentEventRecorder<R> implements EventRecorder<R> {
+public final class SilentEventRecorder extends BaseEventRecorder {
+
+    public SilentEventRecorder(@Nonnull String topic) {
+        super(topic);
+    }
 
     @Nonnull
     @Override
@@ -17,25 +21,13 @@ public class SilentEventRecorder<R> implements EventRecorder<R> {
 
     @Nonnull
     @Override
-    public EventRecorder<R> visibleLevel(@Nonnull LogLevel level) {
+    public EventRecorder visibleLevel(@Nonnull LogLevel level) {
         // do nothing to keep silent
         return this;
     }
 
-    @Nonnull
     @Override
-    public String topic() {
-        return "";
-    }
-
-    @Nonnull
-    @Override
-    public Adapter<EventRecord, R> adapter() {
-        throw new UnsupportedOperationException("SilentEventRecorder does not support adapter");
-    }
-
-    @Override
-    public final void recordEvent(@Nonnull EventRecord eventRecord) {
+    public void recordEvent(@Nonnull EventRecord eventRecord) {
         // do nothing to keep silent
     }
 }
