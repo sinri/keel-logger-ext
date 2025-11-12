@@ -6,7 +6,6 @@ import io.github.sinri.keel.logger.api.metric.MetricRecorder;
 import io.vertx.core.Future;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -78,11 +77,10 @@ abstract public class AbstractMetricRecorder extends KeelVerticleImpl implements
      * <p>
      * The override method should call the super method to ensure proper resource closure.
      *
-     * @throws IOException if an I/O error occurs during the close operation
      * @since 4.1.3
      */
     @Override
-    public void close() throws IOException {
+    public void close() {
         endSwitch.set(true);
     }
 

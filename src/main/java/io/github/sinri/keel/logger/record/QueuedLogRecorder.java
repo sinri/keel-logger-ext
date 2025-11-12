@@ -1,6 +1,7 @@
-package io.github.sinri.keel.logger.impl.record;
+package io.github.sinri.keel.logger.record;
 
 
+import io.github.sinri.keel.logger.adapter.writer.QueuedLogWriter;
 import io.github.sinri.keel.logger.api.record.LoggingRecord;
 import io.github.sinri.keel.logger.api.record.LoggingRecorder;
 

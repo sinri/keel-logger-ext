@@ -1,8 +1,8 @@
 package io.github.sinri.keel.logger.slf4j;
 
+import io.github.sinri.keel.logger.adapter.adapter.EventForStdoutAdapter;
 import io.github.sinri.keel.logger.api.adapter.Adapter;
 import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.github.sinri.keel.logger.impl.event.PlainEventAdapter;
 import io.vertx.core.Handler;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
@@ -141,7 +141,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      */
     @Nonnull
     protected Supplier<Adapter<EventRecord, String>> getAdapterSupplier() {
-        return PlainEventAdapter::getInstance;
+        return EventForStdoutAdapter::getInstance;
     }
 
     @Nullable

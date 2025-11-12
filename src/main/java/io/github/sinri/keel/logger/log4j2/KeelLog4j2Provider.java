@@ -1,9 +1,9 @@
 package io.github.sinri.keel.logger.log4j2;
 
+import io.github.sinri.keel.logger.adapter.adapter.EventForStdoutAdapter;
 import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.Adapter;
 import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.github.sinri.keel.logger.impl.event.PlainEventAdapter;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.apache.logging.log4j.spi.Provider;
@@ -73,7 +73,7 @@ public class KeelLog4j2Provider extends Provider {
      */
     @Nonnull
     protected Supplier<Adapter<EventRecord, String>> getAdapterSupplier() {
-        return PlainEventAdapter::getInstance;
+        return EventForStdoutAdapter::getInstance;
     }
 
     @Nullable

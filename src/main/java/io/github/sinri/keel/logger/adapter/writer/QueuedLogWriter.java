@@ -1,11 +1,10 @@
-package io.github.sinri.keel.logger.impl.record;
+package io.github.sinri.keel.logger.adapter.writer;
 
 import io.github.sinri.keel.base.verticles.KeelVerticleImpl;
-import io.github.sinri.keel.logger.api.adapter.LogWriter;
+import io.github.sinri.keel.logger.api.adapter.PersistentLogWriter;
 import io.vertx.core.Future;
 
 import javax.annotation.Nonnull;
-import java.io.Closeable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.SynchronousQueue;
@@ -14,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.sinri.keel.facade.KeelInstance.Keel;
 
-public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements LogWriter<R>, Closeable {
+public abstract class QueuedLogWriter<R> extends KeelVerticleImpl implements PersistentLogWriter<R> {
     private final Map<String, Queue<R>> queueMap = new ConcurrentHashMap<>();
     private final AtomicBoolean closeFlag = new AtomicBoolean(false);
 

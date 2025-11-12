@@ -1,18 +1,17 @@
-package io.github.sinri.keel.logger.impl.event;
+package io.github.sinri.keel.logger.event;
 
-import io.github.sinri.keel.logger.api.LogLevel;
+import io.github.sinri.keel.logger.adapter.adapter.EventForStdoutAdapter;
 import io.github.sinri.keel.logger.api.adapter.Adapter;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 
 import javax.annotation.Nonnull;
 
-public class PlainEventRecorder extends AbstractEventRecorder<String> {
+public class StdoutEventRecorder extends AbstractEventRecorder<String> {
     private final Adapter<EventRecord, String> adapter;
 
-    public PlainEventRecorder(String topic, LogLevel level) {
+    public StdoutEventRecorder(String topic) {
         super(topic);
-        this.visibleLevel(level);
-        this.adapter = PlainEventAdapter.getInstance();
+        this.adapter = EventForStdoutAdapter.getInstance();
     }
 
     @Nonnull

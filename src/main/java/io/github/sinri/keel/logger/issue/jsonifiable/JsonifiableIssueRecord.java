@@ -1,4 +1,4 @@
-package io.github.sinri.keel.logger.impl.issue.jsonifiable;
+package io.github.sinri.keel.logger.issue.jsonifiable;
 
 import io.github.sinri.keel.core.json.JsonObjectConvertible;
 import io.github.sinri.keel.core.json.JsonifiedThrowable;

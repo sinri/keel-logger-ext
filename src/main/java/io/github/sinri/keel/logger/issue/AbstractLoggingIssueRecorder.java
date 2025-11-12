@@ -1,4 +1,4 @@
-package io.github.sinri.keel.logger.impl.issue;
+package io.github.sinri.keel.logger.issue;
 
 import io.github.sinri.keel.logger.api.issue.IssueRecord;
 import io.github.sinri.keel.logger.api.issue.LoggingIssueRecorder;

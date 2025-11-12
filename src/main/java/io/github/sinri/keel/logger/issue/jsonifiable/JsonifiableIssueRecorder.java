@@ -1,14 +1,15 @@
-package io.github.sinri.keel.logger.impl.issue.jsonifiable;
+package io.github.sinri.keel.logger.issue.jsonifiable;
 
 import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.Adapter;
-import io.github.sinri.keel.logger.impl.issue.AbstractIssueRecorder;
+import io.github.sinri.keel.logger.issue.AbstractIssueRecorder;
 import io.vertx.core.json.JsonObject;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public abstract class JsonifiableIssueRecorder<T extends JsonifiableIssueRecord<T>> extends AbstractIssueRecorder<T, JsonObject> {
+public abstract class JsonifiableIssueRecorder<T extends JsonifiableIssueRecord<T>>
+        extends AbstractIssueRecorder<T, JsonObject> {
 
     @Nonnull
     private final Supplier<T> issueRecordSupplier;
