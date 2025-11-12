@@ -1,16 +1,11 @@
-package io.github.sinri.keel.logger;
+package io.github.sinri.keel.logger.factory;
 
-import io.github.sinri.keel.logger.adapter.render.CommonEvent2StringRender;
 import io.github.sinri.keel.logger.adapter.render.CommonIssue2LogRender;
-import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.Adapter;
 import io.github.sinri.keel.logger.api.adapter.InstantLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LoggingRecordToStdoutWriter;
-import io.github.sinri.keel.logger.api.adapter.StringToStdoutWriter;
 import io.github.sinri.keel.logger.api.event.EventRecorder;
-import io.github.sinri.keel.logger.api.event.Logger;
-import io.github.sinri.keel.logger.api.event.LoggerFactory;
-import io.github.sinri.keel.logger.api.event.RecorderFactory;
+import io.github.sinri.keel.logger.api.factory.RecorderFactory;
 import io.github.sinri.keel.logger.api.issue.IssueRecord;
 import io.github.sinri.keel.logger.api.issue.IssueRecorder;
 import io.github.sinri.keel.logger.api.issue.LoggingIssueRecorder;
@@ -22,7 +17,7 @@ import io.github.sinri.keel.logger.issue.plain.StdoutIssueRecorder;
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public class StdoutRecorderFactory implements RecorderFactory<String>, LoggerFactory {
+public class StdoutRecorderFactory implements RecorderFactory<String> {
     private static final StdoutRecorderFactory instance = new StdoutRecorderFactory();
 
     private StdoutRecorderFactory() {
@@ -62,11 +57,5 @@ public class StdoutRecorderFactory implements RecorderFactory<String>, LoggerFac
                 return adapter;
             }
         };
-    }
-
-    @Nonnull
-    @Override
-    public Logger createLogger(@Nonnull String topic) {
-        return new Logger(topic, LogLevel.INFO, Adapter.build(CommonEvent2StringRender.getInstance(), StringToStdoutWriter.getInstance()));
     }
 }
