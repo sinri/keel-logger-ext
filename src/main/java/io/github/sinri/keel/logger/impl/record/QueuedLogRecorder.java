@@ -1,11 +1,12 @@
 package io.github.sinri.keel.logger.impl.record;
 
-import io.github.sinri.keel.logger.api.record.LogRecord;
-import io.github.sinri.keel.logger.api.record.LogRecorder;
+
+import io.github.sinri.keel.logger.api.record.LoggingRecord;
+import io.github.sinri.keel.logger.api.record.LoggingRecorder;
 
 import javax.annotation.Nonnull;
 
-public abstract class QueuedLogRecorder implements LogRecorder {
+public abstract class QueuedLogRecorder implements LoggingRecorder {
     @Nonnull
     private final String topic;
 
@@ -14,7 +15,7 @@ public abstract class QueuedLogRecorder implements LogRecorder {
     }
 
     @Nonnull
-    abstract protected QueuedLogWriter<LogRecord> writer();
+    abstract protected QueuedLogWriter<LoggingRecord> writer();
 
     @Nonnull
     @Override
@@ -23,7 +24,7 @@ public abstract class QueuedLogRecorder implements LogRecorder {
     }
 
     @Override
-    public final void recordLog(@Nonnull LogRecord record) {
+    public final void recordLog(@Nonnull LoggingRecord record) {
         this.writer().write(topic, record);
     }
 
