@@ -9,6 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Keel 体系下的面向标准输出的主题化日志记录即时处理器。
+ *
+ * @since 5.0.0
+ */
 public final class StdoutTopicRecordConsumer extends BaseTopicRecordConsumer {
     @Override
     public String renderThrowable(@NotNull Throwable throwable) {

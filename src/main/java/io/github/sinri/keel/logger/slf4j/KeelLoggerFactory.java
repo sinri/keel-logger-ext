@@ -15,30 +15,11 @@ import java.util.function.Supplier;
 
 
 /**
- * A factory implementation for creating SLF4J Logger instances that integrate with the Keel logging framework.
- * <p>
- * This factory implements the SLF4J {@link ILoggerFactory} interface and creates {@link KeelSlf4jLogger} instances
- * that bridge SLF4J logging calls to the Keel issue recording system. The factory uses a caching mechanism to
- * ensure that multiple requests for the same logger name return the same logger instance.
- * <p>
- * The factory is configured with a {@link TopicRecordConsumer} supplier that provides the underlying
- * logging infrastructure. This allows for flexible configuration and lazy initialization of the logging backend.
- * <p>
- * <strong>Thread Safety:</strong> This factory is thread-safe. Logger creation is synchronized to prevent
- * race conditions when multiple threads request the same logger simultaneously.
- * <p>
- * <strong>Usage Example:</strong>
- * <pre>{@code
- * // Create a factory with a stdout adapter
- * KeelLoggerFactory factory = new KeelLoggerFactory(() -> SyncStdoutAdapter.getInstance());
- *
- * // Get a logger instance
- * Logger logger = factory.getLogger("com.example.MyClass");
- * }</pre>
+ * 在 Keel 日志体系下封装实现的 slf4j 体系日志记录器工厂。
  *
  * @see KeelSlf4jLogger
  * @see ILoggerFactory
- * @since 4.1.1
+ * @since 5.0.0
  */
 public final class KeelLoggerFactory implements ILoggerFactory {
 
@@ -102,9 +83,9 @@ public final class KeelLoggerFactory implements ILoggerFactory {
      */
     @Override
     public Logger getLogger(String name) {
-        if(loggerCache.containsKey(name)){
+        if (loggerCache.containsKey(name)) {
             return loggerCache.get(name);
-        }else{
+        } else {
             synchronized (adapterSupplier) {
                 var logger = new KeelSlf4jLogger(adapterSupplier, LogLevel.INFO, name, issueRecordInitializer);
                 //Keel.getLogger().notice("Keel Logging for slf4j built logger for [" + name + "]");

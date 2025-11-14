@@ -14,8 +14,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-// import static io.github.sinri.keel.facade.KeelInstance.Keel;
-
+/**
+ * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器上下文。
+ *
+ * @since 5.0.0
+ */
 public final class KeelLog4j2LoggerContext implements LoggerContext {
     private final Map<String, KeelLog4j2Logger> loggerMap;
     @NotNull
@@ -51,7 +54,6 @@ public final class KeelLog4j2LoggerContext implements LoggerContext {
                 if (existed == null) {
                     var logger = new KeelLog4j2Logger(this.adapterSupplier, visibleBaseLevel, name, issueRecordInitializer);
                     loggerMap.put(name, logger);
-                    // Keel.getLogger().notice("Keel Logging for log4j built logger for [" + name + "]");
                     System.out.println("Keel Logging for log4j built logger for [" + name + "]");
                     return logger;
                 } else {

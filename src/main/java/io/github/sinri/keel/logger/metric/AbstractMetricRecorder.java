@@ -13,13 +13,14 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * 一个基本的定量指标记录器实现，可供继承重载以完善。
+ *
+ * @since 5.0.0
+ */
 abstract public class AbstractMetricRecorder extends AbstractKeelVerticle implements MetricRecorder, Closeable {
     private final AtomicBoolean endSwitch = new AtomicBoolean(false);
     private final Queue<MetricRecord> metricRecordQueue = new ConcurrentLinkedQueue<>();
-
-    public AbstractMetricRecorder() {
-    }
 
     public void recordMetric(@NotNull MetricRecord metricRecord) {
         this.metricRecordQueue.add(metricRecord);

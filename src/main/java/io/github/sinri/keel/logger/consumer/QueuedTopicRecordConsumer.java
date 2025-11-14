@@ -15,7 +15,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.sinri.keel.base.KeelInstance.Keel;
 
-
+/**
+ * 一个基于队列处理的主题化日志记录持久处理器实现。
+ *
+ * @since 5.0.0
+ */
 public abstract class QueuedTopicRecordConsumer extends AbstractKeelVerticle implements PersistentTopicRecordConsumer {
     private final Map<String, Queue<EventRecord>> queueMap = new ConcurrentHashMap<>();
     private final AtomicBoolean closeFlag = new AtomicBoolean(false);

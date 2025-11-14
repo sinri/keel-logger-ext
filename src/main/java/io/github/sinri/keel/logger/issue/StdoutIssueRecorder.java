@@ -8,6 +8,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
+/**
+ * Keel 体系下的面向标准输出的特定问题记录器。
+ *
+ * @param <T> 特定问题记录的类型
+ * @since 5.0.0
+ */
 public class StdoutIssueRecorder<T extends IssueRecord<T>> extends BaseIssueRecorder<T> {
 
     private final StdoutTopicRecordConsumer consumer;

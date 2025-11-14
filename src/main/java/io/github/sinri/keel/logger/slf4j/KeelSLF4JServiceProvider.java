@@ -15,38 +15,22 @@ import static io.github.sinri.keel.base.KeelInstance.Keel;
 
 
 /**
- * Keel 日志系统的 SLF4J 服务提供者抽象基类。
+ * 在 Keel 日志体系下封装实现的 slf4j 体系日志记录服务提供者。
  * <p>
- * 该类实现了 {@link SLF4JServiceProvider} 接口，为 SLF4J 日志框架提供
- * 基于 Keel 日志系统的服务提供者实现。通过该服务提供者，SLF4J 的日志
- * 调用将被路由到 Keel 的日志记录系统中。
+ *  <ul>
+ *      <li>{@link #getMarkerFactory()} 返回 {@code null}，不支持标记功能</li>
+ *      <li>{@link #getMDCAdapter()} 返回 {@code null}，不支持 MDC 功能</li>
+ *      <li>建议使用 Keel 日志系统的 {@code attribute} 和 {@code context} 方法替代 MDC</li>
+ *  </ul>
  * <p>
- * <strong>功能特性：</strong>
- * <ul>
- *   <li>提供 {@link KeelLoggerFactory} 工厂实例用于创建日志记录器</li>
- *   <li>支持 SLF4J 2.0.17 API 版本</li>
- *   <li>不支持 SLF4J 的 Marker 和 MDC 功能</li>
- *   <li>通过适配器模式集成 Keel 日志记录中心</li>
- * </ul>
- * <p>
- * <strong>使用方式：</strong>
- * <br>
- * 子类需要实现具体的服务提供者逻辑，通常通过 Java SPI 机制自动发现和加载。
- * 在 {@code META-INF/services/org.slf4j.spi.SLF4JServiceProvider} 文件中
- * 声明具体的实现类。自版本4.1.4起，本类不再为抽象类。
- * <p>
- * <strong>限制说明：</strong>
- * <ul>
- *   <li>{@link #getMarkerFactory()} 返回 {@code null}，不支持标记功能</li>
- *   <li>{@link #getMDCAdapter()} 返回 {@code null}，不支持 MDC 功能</li>
- *   <li>建议使用 Keel 日志系统的 {@code attribute} 和 {@code context} 方法替代 MDC</li>
- * </ul>
+ * 可以使用本类或本类的集成类作为具体的服务提供者，通过 Java SPI 机制自动发现和加载，
+ * 即在 {@code META-INF/services/org.slf4j.spi.SLF4JServiceProvider} 文件中声明具体的实现类。
  *
  * @author Sinri Edogawa
  * @see SLF4JServiceProvider
  * @see KeelLoggerFactory
  * @see KeelSlf4jLogger
- * @since 4.1.1
+ * @since 5.0.0
  */
 public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
     /**

@@ -14,6 +14,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+/**
+ * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器。
+ *
+ * @since 5.0.0
+ */
 public final class KeelLog4j2Logger extends AbstractLogger {
     private final Supplier<TopicRecordConsumer> adapterSupplier;
     private final String topic;
@@ -33,7 +38,7 @@ public final class KeelLog4j2Logger extends AbstractLogger {
         this.issueRecordInitializer = issueRecordInitializer;
     }
 
-    @Nullable
+    @NotNull
     private static LogLevel transLevel(Level level) {
         if (level == Level.TRACE || level == Level.ALL) {
             return LogLevel.TRACE;
@@ -48,9 +53,9 @@ public final class KeelLog4j2Logger extends AbstractLogger {
         } else if (level == Level.FATAL) {
             return LogLevel.FATAL;
         } else if (level == Level.OFF) {
-            return null;
+            return LogLevel.SILENT;
         } else {
-            return null;
+            return LogLevel.SILENT;
         }
     }
 
@@ -64,6 +69,7 @@ public final class KeelLog4j2Logger extends AbstractLogger {
             case WARNING -> Level.WARN;
             case ERROR -> Level.ERROR;
             case FATAL -> Level.FATAL;
+            case SILENT -> Level.OFF;
         };
     }
 

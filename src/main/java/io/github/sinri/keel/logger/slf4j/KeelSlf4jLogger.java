@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * {@link Marker} is not supported yet, and would be ignored.
+ * 在 Keel 日志体系下封装实现的 slf4j 体系日志记录器。
+ * <p>
+ * {@link Marker} 尚未实现，相关参数不起作用。
  *
- * @since 4.1.1
+ * @since 5.0.0
  */
 public final class KeelSlf4jLogger implements Logger {
     /**

@@ -13,7 +13,13 @@ import java.util.function.Supplier;
 
 import static io.github.sinri.keel.base.KeelInstance.Keel;
 
-
+/**
+ * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器提供者，可以用于 SPI 机制下的服务提供者发现。
+ *
+ * @since 5.0.0
+ * @deprecated 最新的用法已不需要通过本类实现 SPI；直接以 {@link KeelLog4j2LoggerContextFactory}实现 SPI。
+ */
+@Deprecated(since = "5.0.0")
 public class KeelLog4j2Provider extends Provider {
     public static final int DEFAULT_PRIORITY = 50;
     public static final String DEFAULT_VERSIONS = "2.x";
