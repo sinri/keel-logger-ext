@@ -3,15 +3,15 @@ package io.github.sinri.keel.logger.slf4j;
 import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-import static io.github.sinri.keel.facade.KeelInstance.Keel;
+import static io.github.sinri.keel.base.KeelInstance.Keel;
 
 
 /**
@@ -139,7 +139,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * @return 提供 {@code KeelIssueRecorderAdapter} 实例的供应者，
      *         该适配器从 Keel 日志记录中心获取
      */
-    @Nonnull
+    @NotNull
     protected Supplier<TopicRecordConsumer> getAdapterSupplier() {
         return () -> Keel.getRecorderFactory().sharedTopicRecordConsumer();
     }

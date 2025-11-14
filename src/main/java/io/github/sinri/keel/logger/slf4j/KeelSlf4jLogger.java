@@ -4,12 +4,12 @@ import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.helpers.MessageFormatter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -24,20 +24,20 @@ public final class KeelSlf4jLogger implements Logger {
      * Supplier for obtaining the issue recorder adapter used to handle log events.
      * This allows for lazy initialization and dynamic adapter switching.
      */
-    @Nonnull
+    @NotNull
     private final Supplier<TopicRecordConsumer> adapterSupplier;
 
     /**
      * The topic/name of this logger instance, typically representing the class or component being logged.
      */
-    @Nonnull
+    @NotNull
     private final String topic;
 
     /**
      * The minimum log level that will be processed by this logger.
      * Log events below this level will be filtered out.
      */
-    @Nonnull
+    @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
     private final Handler<EventRecord> issueRecordInitializer;
@@ -50,9 +50,9 @@ public final class KeelSlf4jLogger implements Logger {
      * @param topic            the name/topic of this logger instance
      */
     KeelSlf4jLogger(
-            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
-            @Nonnull LogLevel visibleBaseLevel,
-            @Nonnull String topic,
+            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull LogLevel visibleBaseLevel,
+            @NotNull String topic,
             @Nullable Handler<EventRecord> issueRecordInitializer
     ) {
         this.adapterSupplier = adapterSupplier;
@@ -76,7 +76,7 @@ public final class KeelSlf4jLogger implements Logger {
      *
      * @return the visible base log level
      */
-    @Nonnull
+    @NotNull
     private LogLevel getVisibleBaseLevel() {
         return visibleBaseLevel;
     }
@@ -95,7 +95,7 @@ public final class KeelSlf4jLogger implements Logger {
      *
      * @param issueHandler the handler to modify the base issue.
      */
-    private void record(@Nonnull Handler<EventRecord> issueHandler) {
+    private void record(@NotNull Handler<EventRecord> issueHandler) {
         EventRecord issue = createIssueRecordTemplate();
         issueHandler.handle(issue);
 

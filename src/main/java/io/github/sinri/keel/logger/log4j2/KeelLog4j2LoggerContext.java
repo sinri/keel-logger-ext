@@ -7,9 +7,9 @@ import io.vertx.core.Handler;
 import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -18,16 +18,16 @@ import java.util.function.Supplier;
 
 public final class KeelLog4j2LoggerContext implements LoggerContext {
     private final Map<String, KeelLog4j2Logger> loggerMap;
-    @Nonnull
+    @NotNull
     private final Supplier<TopicRecordConsumer> adapterSupplier;
-    @Nonnull
+    @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
     private final Handler<EventRecord> issueRecordInitializer;
 
     public KeelLog4j2LoggerContext(
-            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
-            @Nonnull LogLevel visibleBaseLevel,
+            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull LogLevel visibleBaseLevel,
             @Nullable Handler<EventRecord> issueRecordInitializer
     ) {
         this.loggerMap = new ConcurrentHashMap<>();

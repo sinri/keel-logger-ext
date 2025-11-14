@@ -1,11 +1,11 @@
 package io.github.sinri.keel.logger.consumer;
 
-import io.github.sinri.keel.base.verticles.KeelVerticleImpl;
+import io.github.sinri.keel.base.verticles.AbstractKeelVerticle;
 import io.github.sinri.keel.logger.api.consumer.PersistentTopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Future;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,9 +13,10 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.github.sinri.keel.facade.KeelInstance.Keel;
+import static io.github.sinri.keel.base.KeelInstance.Keel;
 
-public abstract class QueuedTopicRecordConsumer extends KeelVerticleImpl implements PersistentTopicRecordConsumer {
+
+public abstract class QueuedTopicRecordConsumer extends AbstractKeelVerticle implements PersistentTopicRecordConsumer {
     private final Map<String, Queue<EventRecord>> queueMap = new ConcurrentHashMap<>();
     private final AtomicBoolean closeFlag = new AtomicBoolean(false);
 
@@ -27,8 +28,8 @@ public abstract class QueuedTopicRecordConsumer extends KeelVerticleImpl impleme
         return 128;
     }
 
-    @Nonnull
-    abstract protected Future<Void> processLogRecords(@Nonnull String topic, @Nonnull List<EventRecord> batch);
+    @NotNull
+    abstract protected Future<Void> processLogRecords(@NotNull String topic, @NotNull List<EventRecord> batch);
 
     @Override
     protected Future<Void> startVerticle() {
@@ -71,7 +72,7 @@ public abstract class QueuedTopicRecordConsumer extends KeelVerticleImpl impleme
     }
 
     @Override
-    public void accept(@Nonnull String topic, @Nonnull EventRecord loggingEntity) {
+    public void accept(@NotNull String topic, @NotNull EventRecord loggingEntity) {
         this.queueMap.computeIfAbsent(topic, k -> new SynchronousQueue<>())
                      .add(loggingEntity);
     }

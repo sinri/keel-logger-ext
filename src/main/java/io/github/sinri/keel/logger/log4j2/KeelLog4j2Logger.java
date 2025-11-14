@@ -9,9 +9,9 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.spi.AbstractLogger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public final class KeelLog4j2Logger extends AbstractLogger {
@@ -22,9 +22,9 @@ public final class KeelLog4j2Logger extends AbstractLogger {
     private final Handler<EventRecord> issueRecordInitializer;
 
     public KeelLog4j2Logger(
-            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
-            @Nonnull LogLevel visibleBaseLevel,
-            @Nonnull String topic,
+            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull LogLevel visibleBaseLevel,
+            @NotNull String topic,
             @Nullable Handler<EventRecord> issueRecordInitializer) {
         super(topic, null, null);
         this.adapterSupplier = adapterSupplier;
@@ -33,6 +33,7 @@ public final class KeelLog4j2Logger extends AbstractLogger {
         this.issueRecordInitializer = issueRecordInitializer;
     }
 
+    @Nullable
     private static LogLevel transLevel(Level level) {
         if (level == Level.TRACE || level == Level.ALL) {
             return LogLevel.TRACE;
@@ -47,31 +48,23 @@ public final class KeelLog4j2Logger extends AbstractLogger {
         } else if (level == Level.FATAL) {
             return LogLevel.FATAL;
         } else if (level == Level.OFF) {
-            return LogLevel.SILENT;
+            return null;
         } else {
-            return LogLevel.SILENT;
+            return null;
         }
     }
 
-    private static Level transLevel(LogLevel level) {
-        switch (level) {
-            case TRACE:
-                return Level.TRACE;
-            case DEBUG:
-                return Level.DEBUG;
-            case INFO:
-            case NOTICE:
-                return Level.INFO;
-            case WARNING:
-                return Level.WARN;
-            case ERROR:
-                return Level.ERROR;
-            case FATAL:
-                return Level.FATAL;
-            case SILENT:
-            default:
-                return Level.OFF;
-        }
+    @NotNull
+    private static Level transLevel(@Nullable LogLevel level) {
+        if (level == null) return Level.OFF;
+        return switch (level) {
+            case TRACE -> Level.TRACE;
+            case DEBUG -> Level.DEBUG;
+            case INFO, NOTICE -> Level.INFO;
+            case WARNING -> Level.WARN;
+            case ERROR -> Level.ERROR;
+            case FATAL -> Level.FATAL;
+        };
     }
 
     @Override

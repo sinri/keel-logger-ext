@@ -1,27 +1,27 @@
 package io.github.sinri.keel.logger.consumer;
 
-import io.github.sinri.keel.logger.base.consumer.BaseTopicRecordConsumer;
-import io.github.sinri.keel.utils.StringUtils;
+import io.github.sinri.keel.base.utils.StringUtils;
+import io.github.sinri.keel.logger.api.consumer.BaseTopicRecordConsumer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
 public final class StdoutTopicRecordConsumer extends BaseTopicRecordConsumer {
     @Override
-    public String renderThrowable(@Nonnull Throwable throwable) {
+    public String renderThrowable(@NotNull Throwable throwable) {
         return StringUtils.renderThrowableChain(throwable);
     }
 
     @Override
-    public String renderClassification(@Nonnull List<String> classification) {
+    public String renderClassification(@NotNull List<String> classification) {
         return new JsonArray(classification).encode();
     }
 
     @Override
-    public String renderContext(@Nonnull Map<String, Object> context) {
+    public String renderContext(@NotNull Map<String, Object> context) {
         return new JsonObject(context).encodePrettily();
     }
 }

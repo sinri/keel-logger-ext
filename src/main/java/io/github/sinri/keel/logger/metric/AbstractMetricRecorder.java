@@ -1,9 +1,10 @@
 package io.github.sinri.keel.logger.metric;
 
-import io.github.sinri.keel.base.verticles.KeelVerticleImpl;
+import io.github.sinri.keel.base.verticles.AbstractKeelVerticle;
 import io.github.sinri.keel.logger.api.metric.MetricRecord;
 import io.github.sinri.keel.logger.api.metric.MetricRecorder;
 import io.vertx.core.Future;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -12,17 +13,15 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static io.github.sinri.keel.facade.KeelInstance.Keel;
 
-
-abstract public class AbstractMetricRecorder extends KeelVerticleImpl implements MetricRecorder, Closeable {
+abstract public class AbstractMetricRecorder extends AbstractKeelVerticle implements MetricRecorder, Closeable {
     private final AtomicBoolean endSwitch = new AtomicBoolean(false);
     private final Queue<MetricRecord> metricRecordQueue = new ConcurrentLinkedQueue<>();
 
     public AbstractMetricRecorder() {
     }
 
-    public void recordMetric(MetricRecord metricRecord) {
+    public void recordMetric(@NotNull MetricRecord metricRecord) {
         this.metricRecordQueue.add(metricRecord);
     }
 
@@ -61,7 +60,7 @@ abstract public class AbstractMetricRecorder extends KeelVerticleImpl implements
               })
               .andThen(ar -> {
                   if (!endSwitch.get()) {
-                      Keel.getVertx().setTimer(1000L, id -> start());
+                      context.owner().setTimer(1000L, id -> start());
                   }
               });
         return Future.succeededFuture();

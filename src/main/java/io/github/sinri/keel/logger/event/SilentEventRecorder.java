@@ -1,33 +1,26 @@
 package io.github.sinri.keel.logger.event;
 
 import io.github.sinri.keel.logger.api.LogLevel;
+import io.github.sinri.keel.logger.api.event.BaseEventRecorder;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.github.sinri.keel.logger.api.event.EventRecorder;
-import io.github.sinri.keel.logger.base.event.BaseEventRecorder;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 
 public final class SilentEventRecorder extends BaseEventRecorder {
 
-    public SilentEventRecorder(@Nonnull String topic) {
+    public SilentEventRecorder(@NotNull String topic) {
         super(topic);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public LogLevel visibleLevel() {
-        return LogLevel.SILENT;
-    }
-
-    @Nonnull
-    @Override
-    public EventRecorder visibleLevel(@Nonnull LogLevel level) {
-        // do nothing to keep silent
-        return this;
+    public EventRecorder visibleLevel(@NotNull LogLevel level) {
+        throw new UnsupportedOperationException("SilentEventRecorder can not change visible level as it is no effect.");
     }
 
     @Override
-    public void recordEvent(@Nonnull EventRecord eventRecord) {
+    public void recordEvent(@NotNull EventRecord eventRecord) {
         // do nothing to keep silent
     }
 }

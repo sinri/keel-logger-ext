@@ -4,11 +4,11 @@ import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
 import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -49,7 +49,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
      * The same supplier instance is shared among all loggers created by this factory, enabling
      * consistent logging behavior across the application.
      */
-    @Nonnull
+    @NotNull
     private final Supplier<TopicRecordConsumer> adapterSupplier;
     @Nullable
     private final Handler<EventRecord> issueRecordInitializer;
@@ -75,7 +75,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
      * @throws NullPointerException if adapterSupplier is null
      */
     public KeelLoggerFactory(
-            @Nonnull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
             @Nullable Handler<EventRecord> issueRecordInitializer) {
         this.adapterSupplier = adapterSupplier;
         this.issueRecordInitializer = issueRecordInitializer;

@@ -6,12 +6,13 @@ import io.github.sinri.keel.logger.api.event.EventRecord;
 import io.vertx.core.Handler;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.apache.logging.log4j.spi.Provider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-import static io.github.sinri.keel.facade.KeelInstance.Keel;
+import static io.github.sinri.keel.base.KeelInstance.Keel;
+
 
 public class KeelLog4j2Provider extends Provider {
     public static final int DEFAULT_PRIORITY = 50;
@@ -26,7 +27,7 @@ public class KeelLog4j2Provider extends Provider {
         super(priority, versions);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public LoggerContextFactory getLoggerContextFactory() {
         if (loggerContextFactory == null) {
@@ -44,7 +45,8 @@ public class KeelLog4j2Provider extends Provider {
     }
 
     @Override
-    public @Nullable Class<? extends LoggerContextFactory> loadLoggerContextFactory() {
+    @Nullable
+    public Class<? extends LoggerContextFactory> loadLoggerContextFactory() {
         // 按照 Log4j SPI 的设计原意，此方法只负责返回工厂类型
         // 实际的实例化工作由 getLoggerContextFactory() 负责
         return KeelLog4j2LoggerContextFactory.class;
@@ -58,7 +60,7 @@ public class KeelLog4j2Provider extends Provider {
      *
      * @return the minimum {@link LogLevel} that will be processed
      */
-    @Nonnull
+    @NotNull
     protected LogLevel getVisibleBaseLevel() {
         return LogLevel.INFO;
     }
@@ -72,7 +74,7 @@ public class KeelLog4j2Provider extends Provider {
      *
      * @return the adapter supplier
      */
-    @Nonnull
+    @NotNull
     protected Supplier<TopicRecordConsumer> getAdapterSupplier() {
         return () -> Keel.getRecorderFactory().sharedTopicRecordConsumer();
     }
