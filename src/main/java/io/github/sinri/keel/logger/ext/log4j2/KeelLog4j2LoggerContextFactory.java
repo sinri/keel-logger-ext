@@ -1,15 +1,15 @@
-package io.github.sinri.keel.logger.log4j2;
+package io.github.sinri.keel.logger.ext.log4j2;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
-import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.vertx.core.Handler;
+import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.spi.LoggerContext;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -26,9 +26,9 @@ public final class KeelLog4j2LoggerContextFactory implements LoggerContextFactor
     private final KeelLog4j2LoggerContext loggerContext;
 
     public KeelLog4j2LoggerContextFactory(
-            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
-            @Nullable Handler<EventRecord> issueRecordInitializer
+            @Nullable Consumer<Log> issueRecordInitializer
     ) {
         this.loggerContext = new KeelLog4j2LoggerContext(adapterSupplier, visibleBaseLevel, issueRecordInitializer);
     }

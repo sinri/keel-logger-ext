@@ -1,9 +1,8 @@
-package io.github.sinri.keel.logger.log4j2;
+package io.github.sinri.keel.logger.ext.log4j2;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
-import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.vertx.core.Handler;
+import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.ThreadContext;
@@ -12,6 +11,7 @@ import org.apache.logging.log4j.spi.AbstractLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -20,17 +20,17 @@ import java.util.function.Supplier;
  * @since 5.0.0
  */
 public final class KeelLog4j2Logger extends AbstractLogger {
-    private final Supplier<TopicRecordConsumer> adapterSupplier;
+    private final Supplier<LogWriterAdapter> adapterSupplier;
     private final String topic;
     private final LogLevel visibleBaseLevel;
     @Nullable
-    private final Handler<EventRecord> issueRecordInitializer;
+    private final Consumer<Log> issueRecordInitializer;
 
     public KeelLog4j2Logger(
-            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @NotNull String topic,
-            @Nullable Handler<EventRecord> issueRecordInitializer) {
+            @Nullable Consumer<Log> issueRecordInitializer) {
         super(topic, null, null);
         this.adapterSupplier = adapterSupplier;
         this.topic = topic;
@@ -157,12 +157,12 @@ public final class KeelLog4j2Logger extends AbstractLogger {
 
     @Override
     public void logMessage(String fqcn, Level level, Marker marker, Message message, Throwable t) {
-        TopicRecordConsumer adapter = this.adapterSupplier.get();
+        LogWriterAdapter adapter = this.adapterSupplier.get();
         if (adapter == null) return;
 
-        EventRecord keelEventLog = new EventRecord();
+        Log keelEventLog = new Log();
         if (issueRecordInitializer != null) {
-            issueRecordInitializer.handle(keelEventLog);
+            issueRecordInitializer.accept(keelEventLog);
         }
         // keelEventLog.classification(fqcn);
         keelEventLog.level(transLevel(level));
@@ -185,7 +185,7 @@ public final class KeelLog4j2Logger extends AbstractLogger {
      *
      * @param keelEventLog the log event to add context to
      */
-    private void addThreadContextToLog(EventRecord keelEventLog) {
+    private void addThreadContextToLog(Log keelEventLog) {
         try {
             var contextMap = ThreadContext.getContext();
             if (contextMap != null && !contextMap.isEmpty()) {

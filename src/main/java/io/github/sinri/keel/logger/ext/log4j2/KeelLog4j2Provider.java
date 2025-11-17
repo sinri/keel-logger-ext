@@ -1,17 +1,17 @@
-package io.github.sinri.keel.logger.log4j2;
+package io.github.sinri.keel.logger.ext.log4j2;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
-import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.vertx.core.Handler;
+import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
+import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.apache.logging.log4j.spi.Provider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static io.github.sinri.keel.base.KeelInstance.Keel;
 
 /**
  * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器提供者，可以用于 SPI 机制下的服务提供者发现。
@@ -72,21 +72,21 @@ public class KeelLog4j2Provider extends Provider {
     }
 
     /**
-     * Provides a {@link Supplier} that supplies the {@link TopicRecordConsumer} instance.
+     * Provides a {@link Supplier} that supplies the {@link LogWriterAdapter} instance.
      *
      * <p>
-     * Override this method to use another {@link TopicRecordConsumer} to
+     * Override this method to use another {@link LogWriterAdapter} to
      * record issues.
      *
      * @return the adapter supplier
      */
     @NotNull
-    protected Supplier<TopicRecordConsumer> getAdapterSupplier() {
-        return () -> Keel.getRecorderFactory().sharedTopicRecordConsumer();
+    protected Supplier<LogWriterAdapter> getAdapterSupplier() {
+        return BaseLogWriter::getInstance;
     }
 
     @Nullable
-    protected Handler<EventRecord> getIssueRecordInitializer() {
+    protected Consumer<Log> getIssueRecordInitializer() {
         return null;
     }
 }

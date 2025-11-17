@@ -1,9 +1,8 @@
-package io.github.sinri.keel.logger.slf4j;
+package io.github.sinri.keel.logger.ext.slf4j;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
-import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.vertx.core.Handler;
+import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import io.github.sinri.keel.logger.api.log.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -27,7 +27,7 @@ public final class KeelSlf4jLogger implements Logger {
      * This allows for lazy initialization and dynamic adapter switching.
      */
     @NotNull
-    private final Supplier<TopicRecordConsumer> adapterSupplier;
+    private final Supplier<LogWriterAdapter> adapterSupplier;
 
     /**
      * The topic/name of this logger instance, typically representing the class or component being logged.
@@ -42,7 +42,7 @@ public final class KeelSlf4jLogger implements Logger {
     @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
-    private final Handler<EventRecord> issueRecordInitializer;
+    private final Consumer<Log> issueRecordInitializer;
 
     /**
      * Constructs a new KeelSlf4jLogger instance.
@@ -52,10 +52,10 @@ public final class KeelSlf4jLogger implements Logger {
      * @param topic            the name/topic of this logger instance
      */
     KeelSlf4jLogger(
-            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @NotNull String topic,
-            @Nullable Handler<EventRecord> issueRecordInitializer
+            @Nullable Consumer<Log> issueRecordInitializer
     ) {
         this.adapterSupplier = adapterSupplier;
         this.topic = topic;
@@ -83,10 +83,10 @@ public final class KeelSlf4jLogger implements Logger {
         return visibleBaseLevel;
     }
 
-    private EventRecord createIssueRecordTemplate() {
-        var x = new EventRecord();
+    private Log createIssueRecordTemplate() {
+        var x = new Log();
         if (this.issueRecordInitializer != null) {
-            this.issueRecordInitializer.handle(x);
+            this.issueRecordInitializer.accept(x);
         }
         return x;
     }
@@ -97,9 +97,9 @@ public final class KeelSlf4jLogger implements Logger {
      *
      * @param issueHandler the handler to modify the base issue.
      */
-    private void record(@NotNull Handler<EventRecord> issueHandler) {
-        EventRecord issue = createIssueRecordTemplate();
-        issueHandler.handle(issue);
+    private void record(@NotNull Consumer<Log> issueHandler) {
+        Log issue = createIssueRecordTemplate();
+        issueHandler.accept(issue);
 
         if (issue.level().isEnoughSeriousAs(getVisibleBaseLevel())) {
             var adapter = adapterSupplier.get();

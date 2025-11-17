@@ -1,17 +1,16 @@
-package io.github.sinri.keel.logger.slf4j;
+package io.github.sinri.keel.logger.ext.slf4j;
 
-import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
-import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.vertx.core.Handler;
+import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
+import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import io.github.sinri.keel.logger.api.log.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import static io.github.sinri.keel.base.KeelInstance.Keel;
 
 
 /**
@@ -111,7 +110,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
     }
 
     /**
-     * 提供用于获取 {@link TopicRecordConsumer} 实例的供应者。
+     * 提供用于获取 {@link LogWriterAdapter} 实例的供应者。
      * <p>
      * 该方法返回一个 {@code Supplier}，用于延迟获取 Keel 日志系统的
      * 问题记录适配器实例。适配器实例通过 Keel 日志记录中心的
@@ -120,16 +119,15 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * 子类可以重写此方法来提供自定义的适配器供应者实现，
      * 以满足特定的日志记录需求。
      *
-     * @return 提供 {@code KeelIssueRecorderAdapter} 实例的供应者，
-     *         该适配器从 Keel 日志记录中心获取
+     * @return 提供 {@code KeelIssueRecorderAdapter} 实例的供应者。
      */
     @NotNull
-    protected Supplier<TopicRecordConsumer> getAdapterSupplier() {
-        return () -> Keel.getRecorderFactory().sharedTopicRecordConsumer();
+    protected Supplier<LogWriterAdapter> getAdapterSupplier() {
+        return BaseLogWriter::getInstance;
     }
 
     @Nullable
-    protected Handler<EventRecord> getIssueRecordInitializer() {
+    protected Consumer<Log> getIssueRecordInitializer() {
         return null;
     }
 }

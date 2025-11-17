@@ -1,9 +1,8 @@
-package io.github.sinri.keel.logger.log4j2;
+package io.github.sinri.keel.logger.ext.log4j2;
 
 import io.github.sinri.keel.logger.api.LogLevel;
-import io.github.sinri.keel.logger.api.consumer.TopicRecordConsumer;
-import io.github.sinri.keel.logger.api.event.EventRecord;
-import io.vertx.core.Handler;
+import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -22,16 +22,16 @@ import java.util.function.Supplier;
 public final class KeelLog4j2LoggerContext implements LoggerContext {
     private final Map<String, KeelLog4j2Logger> loggerMap;
     @NotNull
-    private final Supplier<TopicRecordConsumer> adapterSupplier;
+    private final Supplier<LogWriterAdapter> adapterSupplier;
     @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
-    private final Handler<EventRecord> issueRecordInitializer;
+    private final Consumer<Log> issueRecordInitializer;
 
     public KeelLog4j2LoggerContext(
-            @NotNull Supplier<TopicRecordConsumer> adapterSupplier,
+            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
-            @Nullable Handler<EventRecord> issueRecordInitializer
+            @Nullable Consumer<Log> issueRecordInitializer
     ) {
         this.loggerMap = new ConcurrentHashMap<>();
         this.adapterSupplier = adapterSupplier;
