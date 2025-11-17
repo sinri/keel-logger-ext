@@ -26,17 +26,17 @@ public final class KeelLog4j2LoggerContext implements LoggerContext {
     @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
-    private final Consumer<Log> issueRecordInitializer;
+    private final Consumer<Log> logInitializer;
 
     public KeelLog4j2LoggerContext(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
-            @Nullable Consumer<Log> issueRecordInitializer
+            @Nullable Consumer<Log> logInitializer
     ) {
         this.loggerMap = new ConcurrentHashMap<>();
         this.adapterSupplier = adapterSupplier;
         this.visibleBaseLevel = visibleBaseLevel;
-        this.issueRecordInitializer = issueRecordInitializer;
+        this.logInitializer = logInitializer;
     }
 
     @Override
@@ -52,7 +52,7 @@ public final class KeelLog4j2LoggerContext implements LoggerContext {
             synchronized (loggerMap) {
                 KeelLog4j2Logger existed = loggerMap.get(name);
                 if (existed == null) {
-                    var logger = new KeelLog4j2Logger(this.adapterSupplier, visibleBaseLevel, name, issueRecordInitializer);
+                    var logger = new KeelLog4j2Logger(this.adapterSupplier, visibleBaseLevel, name, logInitializer);
                     loggerMap.put(name, logger);
                     System.out.println("Keel Logging for log4j built logger for [" + name + "]");
                     return logger;

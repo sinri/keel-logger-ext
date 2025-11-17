@@ -106,7 +106,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      */
     @Override
     public final void initialize() {
-        loggerFactory = new KeelLoggerFactory(getAdapterSupplier(), getIssueRecordInitializer());
+        loggerFactory = new KeelLoggerFactory(getAdapterSupplier(), getLogInitializer());
     }
 
     /**
@@ -119,7 +119,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * 子类可以重写此方法来提供自定义的适配器供应者实现，
      * 以满足特定的日志记录需求。
      *
-     * @return 提供 {@code KeelIssueRecorderAdapter} 实例的供应者。
+     * @return 提供 {@link LogWriterAdapter} 实例的供应者。
      */
     @NotNull
     protected Supplier<LogWriterAdapter> getAdapterSupplier() {
@@ -127,7 +127,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
     }
 
     @Nullable
-    protected Consumer<Log> getIssueRecordInitializer() {
+    protected Consumer<Log> getLogInitializer() {
         return null;
     }
 }

@@ -33,7 +33,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
     @NotNull
     private final Supplier<LogWriterAdapter> adapterSupplier;
     @Nullable
-    private final Consumer<Log> issueRecordInitializer;
+    private final Consumer<Log> logInitializer;
 
     /**
      * Cache for storing created logger instances to ensure singleton behavior per logger name.
@@ -57,9 +57,9 @@ public final class KeelLoggerFactory implements ILoggerFactory {
      */
     public KeelLoggerFactory(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
-            @Nullable Consumer<Log> issueRecordInitializer) {
+            @Nullable Consumer<Log> logInitializer) {
         this.adapterSupplier = adapterSupplier;
-        this.issueRecordInitializer = issueRecordInitializer;
+        this.logInitializer = logInitializer;
     }
 
     /**
@@ -87,7 +87,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
             return loggerCache.get(name);
         } else {
             synchronized (adapterSupplier) {
-                var logger = new KeelSlf4jLogger(adapterSupplier, LogLevel.INFO, name, issueRecordInitializer);
+                var logger = new KeelSlf4jLogger(adapterSupplier, LogLevel.INFO, name, logInitializer);
                 //Keel.getLogger().notice("Keel Logging for slf4j built logger for [" + name + "]");
                 System.out.println("Keel Logging for slf4j built logger for [" + name + "]");
                 loggerCache.put(name, logger);

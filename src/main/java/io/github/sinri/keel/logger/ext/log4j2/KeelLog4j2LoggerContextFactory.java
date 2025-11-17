@@ -28,9 +28,9 @@ public final class KeelLog4j2LoggerContextFactory implements LoggerContextFactor
     public KeelLog4j2LoggerContextFactory(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
-            @Nullable Consumer<Log> issueRecordInitializer
+            @Nullable Consumer<Log> logInitializer
     ) {
-        this.loggerContext = new KeelLog4j2LoggerContext(adapterSupplier, visibleBaseLevel, issueRecordInitializer);
+        this.loggerContext = new KeelLog4j2LoggerContext(adapterSupplier, visibleBaseLevel, logInitializer);
     }
 
     @Override

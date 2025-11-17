@@ -24,18 +24,18 @@ public final class KeelLog4j2Logger extends AbstractLogger {
     private final String topic;
     private final LogLevel visibleBaseLevel;
     @Nullable
-    private final Consumer<Log> issueRecordInitializer;
+    private final Consumer<Log> logInitializer;
 
     public KeelLog4j2Logger(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @NotNull String topic,
-            @Nullable Consumer<Log> issueRecordInitializer) {
+            @Nullable Consumer<Log> logInitializer) {
         super(topic, null, null);
         this.adapterSupplier = adapterSupplier;
         this.topic = topic;
         this.visibleBaseLevel = visibleBaseLevel;
-        this.issueRecordInitializer = issueRecordInitializer;
+        this.logInitializer = logInitializer;
     }
 
     @NotNull
@@ -161,8 +161,8 @@ public final class KeelLog4j2Logger extends AbstractLogger {
         if (adapter == null) return;
 
         Log keelEventLog = new Log();
-        if (issueRecordInitializer != null) {
-            issueRecordInitializer.accept(keelEventLog);
+        if (logInitializer != null) {
+            logInitializer.accept(keelEventLog);
         }
         // keelEventLog.classification(fqcn);
         keelEventLog.level(transLevel(level));

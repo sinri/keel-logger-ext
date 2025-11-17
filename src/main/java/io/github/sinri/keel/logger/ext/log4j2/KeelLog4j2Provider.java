@@ -42,7 +42,7 @@ public class KeelLog4j2Provider extends Provider {
                     loggerContextFactory = new KeelLog4j2LoggerContextFactory(
                             getAdapterSupplier(),
                             getVisibleBaseLevel(),
-                            getIssueRecordInitializer()
+                            getLogInitializer()
                     );
                 }
             }
@@ -86,7 +86,7 @@ public class KeelLog4j2Provider extends Provider {
     }
 
     @Nullable
-    protected Consumer<Log> getIssueRecordInitializer() {
+    protected Consumer<Log> getLogInitializer() {
         return null;
     }
 }

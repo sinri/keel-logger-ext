@@ -42,7 +42,7 @@ public final class KeelSlf4jLogger implements Logger {
     @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
-    private final Consumer<Log> issueRecordInitializer;
+    private final Consumer<Log> logInitializer;
 
     /**
      * Constructs a new KeelSlf4jLogger instance.
@@ -55,12 +55,12 @@ public final class KeelSlf4jLogger implements Logger {
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @NotNull String topic,
-            @Nullable Consumer<Log> issueRecordInitializer
+            @Nullable Consumer<Log> logInitializer
     ) {
         this.adapterSupplier = adapterSupplier;
         this.topic = topic;
         this.visibleBaseLevel = visibleBaseLevel;
-        this.issueRecordInitializer = issueRecordInitializer;
+        this.logInitializer = logInitializer;
     }
 
     /**
@@ -85,8 +85,8 @@ public final class KeelSlf4jLogger implements Logger {
 
     private Log createIssueRecordTemplate() {
         var x = new Log();
-        if (this.issueRecordInitializer != null) {
-            this.issueRecordInitializer.accept(x);
+        if (this.logInitializer != null) {
+            this.logInitializer.accept(x);
         }
         return x;
     }
