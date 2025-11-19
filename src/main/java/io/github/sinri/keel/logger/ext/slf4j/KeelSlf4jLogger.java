@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
-public final class KeelSlf4jLogger implements Logger {
+final class KeelSlf4jLogger implements Logger {
     /**
      * Supplier for obtaining the issue recorder adapter used to handle log events.
      * This allows for lazy initialization and dynamic adapter switching.

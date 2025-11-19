@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * @see ILoggerFactory
  * @since 5.0.0
  */
-public final class KeelLoggerFactory implements ILoggerFactory {
+final class KeelSlf4jLoggerFactory implements ILoggerFactory {
 
     /**
      * Supplier for obtaining the {@link LogWriterAdapter} instance used by created loggers.
@@ -55,7 +55,7 @@ public final class KeelLoggerFactory implements ILoggerFactory {
      *                        must not be null and should return non-null adapters
      * @throws NullPointerException if adapterSupplier is null
      */
-    public KeelLoggerFactory(
+    public KeelSlf4jLoggerFactory(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @Nullable Consumer<Log> logInitializer) {
         this.adapterSupplier = adapterSupplier;

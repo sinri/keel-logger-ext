@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  *
  * @author Sinri Edogawa
  * @see SLF4JServiceProvider
- * @see KeelLoggerFactory
+ * @see KeelSlf4jLoggerFactory
  * @see KeelSlf4jLogger
  * @since 5.0.0
  */
@@ -37,7 +37,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * <p>
      * 在 {@link #initialize()} 方法中初始化，负责创建和缓存 {@link KeelSlf4jLogger} 实例。
      */
-    private KeelLoggerFactory loggerFactory;
+    private KeelSlf4jLoggerFactory loggerFactory;
 
     /**
      * 获取日志记录器工厂实例。
@@ -47,7 +47,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * @return Keel 日志记录器工厂实例
      */
     @Override
-    public final KeelLoggerFactory getLoggerFactory() {
+    public final KeelSlf4jLoggerFactory getLoggerFactory() {
         return loggerFactory;
     }
 
@@ -98,7 +98,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * 初始化 SLF4J 服务提供者。
      * <p>
      * 该方法被声明为 {@code final}，确保子类无法修改初始化逻辑。
-     * 在初始化过程中，会创建一个新的 {@link KeelLoggerFactory} 实例，
+     * 在初始化过程中，会创建一个新的 {@link KeelSlf4jLoggerFactory} 实例，
      * 该工厂使用通过 {@link #getAdapterSupplier()} 方法获取的适配器提供者。
      * <p>
      * 初始化完成后，可以通过 {@link #getLoggerFactory()} 方法获取
@@ -106,7 +106,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      */
     @Override
     public final void initialize() {
-        loggerFactory = new KeelLoggerFactory(getAdapterSupplier(), getLogInitializer());
+        loggerFactory = new KeelSlf4jLoggerFactory(getAdapterSupplier(), getLogInitializer());
     }
 
     /**

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
-public final class KeelLog4j2LoggerContext implements LoggerContext {
+final class KeelLog4j2LoggerContext implements LoggerContext {
     private final Map<String, KeelLog4j2Logger> loggerMap;
     @NotNull
     private final Supplier<LogWriterAdapter> adapterSupplier;

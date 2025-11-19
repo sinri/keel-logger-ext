@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
-public final class KeelLog4j2Logger extends AbstractLogger {
+final class KeelLog4j2Logger extends AbstractLogger {
     private final Supplier<LogWriterAdapter> adapterSupplier;
     private final String topic;
     private final LogLevel visibleBaseLevel;
