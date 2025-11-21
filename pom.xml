@@ -6,8 +6,8 @@
 
     <groupId>io.github.sinri</groupId>
     <artifactId>keel-logger-ext</artifactId>
-    <version>5.0.0-rc.5</version>
-    <!--        <version>5.0.0-SNAPSHOT</version>-->
+    <!--    <version>5.0.0-rc.5</version>-->
+    <version>5.0.0-SNAPSHOT</version>
 
     <name>Keel-Logger-Ext</name>
     <description>
@@ -105,6 +105,8 @@
                 <configuration>
                     <includes>
                         <include>io/github/sinri/keel/logger/ext/**/*UnitTest.java</include>
+                        <include>io/github/sinri/keel/logger/ext/**/*Test.java</include>
+                        <include>io/github/sinri/keel/logger/ext/**/*TestCase.java</include>
                     </includes>
                 </configuration>
             </plugin>
@@ -204,7 +206,7 @@
         <dependency>
             <groupId>io.github.sinri</groupId>
             <artifactId>keel-logger-api</artifactId>
-            <version>5.0.0-rc.11</version>
+            <version>5.0.0-rc.12</version>
         </dependency>
     </dependencies>
 

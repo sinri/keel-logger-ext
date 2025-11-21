@@ -30,7 +30,8 @@ final class KeelSlf4jLogger implements Logger {
     private final Supplier<LogWriterAdapter> adapterSupplier;
 
     /**
-     * The topic/name of this logger instance, typically representing the class or component being logged.
+     * The topic/name of this logger instance, typically representing the class or
+     * component being logged.
      */
     @NotNull
     private final String topic;
@@ -55,8 +56,7 @@ final class KeelSlf4jLogger implements Logger {
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @NotNull String topic,
-            @Nullable Consumer<Log> logInitializer
-    ) {
+            @Nullable Consumer<Log> logInitializer) {
         this.adapterSupplier = adapterSupplier;
         this.topic = topic;
         this.visibleBaseLevel = visibleBaseLevel;
@@ -92,7 +92,8 @@ final class KeelSlf4jLogger implements Logger {
     }
 
     /**
-     * Record an issue (created with `issueRecordBuilder` and modified with `issueHandler`).
+     * Record an issue (created with `issueRecordBuilder` and modified with
+     * `issueHandler`).
      * It may be handled later async, actually.
      *
      * @param issueHandler the handler to modify the base issue.
@@ -111,82 +112,90 @@ final class KeelSlf4jLogger implements Logger {
 
     /**
      * Checks if TRACE level logging is enabled.
-     * TRACE level is not supported in the Keel logger system.
      *
-     * @return always false, as TRACE level is not supported
+     * @return true if TRACE level is enabled based on the visible base level
      */
     @Override
     public boolean isTraceEnabled() {
-        // TRACE is not supported in Keel logger system
-        return false;
+        return LogLevel.TRACE.isEnoughSeriousAs(getVisibleBaseLevel());
     }
 
     /**
      * Logs a message at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param msg the message to log (ignored)
+     * @param msg the message to log
      */
     @Override
     public void trace(String msg) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.message(msg);
+        });
     }
 
     /**
      * Logs a formatted message at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param format the format string (ignored)
-     * @param arg    the argument (ignored)
+     * @param format the format string
+     * @param arg    the argument to be formatted
      */
     @Override
     public void trace(String format, Object arg) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.message(MessageFormatter.arrayFormat(format, new Object[]{arg}).getMessage());
+        });
     }
 
     /**
      * Logs a formatted message at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param format the format string (ignored)
-     * @param arg1   the first argument (ignored)
-     * @param arg2   the second argument (ignored)
+     * @param format the format string
+     * @param arg1   the first argument to be formatted
+     * @param arg2   the second argument to be formatted
      */
     @Override
     public void trace(String format, Object arg1, Object arg2) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.message(MessageFormatter.arrayFormat(format, new Object[]{arg1, arg2}).getMessage());
+        });
     }
 
     /**
      * Logs a formatted message at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param format    the format string (ignored)
-     * @param arguments the arguments (ignored)
+     * @param format    the format string
+     * @param arguments the arguments to be formatted
      */
     @Override
     public void trace(String format, Object... arguments) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.message(MessageFormatter.arrayFormat(format, arguments).getMessage());
+        });
     }
 
     /**
      * Logs a message with an exception at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param msg the message to log (ignored)
-     * @param t   the exception (ignored)
+     * @param msg the message to log
+     * @param t   the exception to log
      */
     @Override
     public void trace(String msg, Throwable t) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.message(msg);
+            log.exception(t);
+        });
     }
 
     /**
      * Checks if TRACE level logging is enabled for the given marker.
-     * TRACE level is not supported in the Keel logger system.
      *
-     * @param marker the marker (ignored)
-     * @return always false, as TRACE level is not supported
+     * @param marker the marker (currently ignored in level determination)
+     * @return true if TRACE level is enabled based on the visible base level
      */
     @Override
     public boolean isTraceEnabled(Marker marker) {
@@ -195,67 +204,83 @@ final class KeelSlf4jLogger implements Logger {
 
     /**
      * Logs a message with marker at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param marker the marker (ignored)
-     * @param msg    the message to log (ignored)
+     * @param marker the marker for classification
+     * @param msg    the message to log
      */
     @Override
     public void trace(Marker marker, String msg) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.classification(transformMarkerToClassification(marker));
+            log.message(msg);
+        });
     }
 
     /**
      * Logs a formatted message with marker at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param marker the marker (ignored)
-     * @param format the format string (ignored)
-     * @param arg    the argument (ignored)
+     * @param marker the marker for classification
+     * @param format the format string
+     * @param arg    the argument to be formatted
      */
     @Override
     public void trace(Marker marker, String format, Object arg) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.classification(transformMarkerToClassification(marker));
+            log.message(MessageFormatter.arrayFormat(format, new Object[]{arg}).getMessage());
+        });
     }
 
     /**
      * Logs a formatted message with marker at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param marker the marker (ignored)
-     * @param format the format string (ignored)
-     * @param arg1   the first argument (ignored)
-     * @param arg2   the second argument (ignored)
+     * @param marker the marker for classification
+     * @param format the format string
+     * @param arg1   the first argument to be formatted
+     * @param arg2   the second argument to be formatted
      */
     @Override
     public void trace(Marker marker, String format, Object arg1, Object arg2) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.classification(transformMarkerToClassification(marker));
+            log.message(MessageFormatter.arrayFormat(format, new Object[]{arg1, arg2}).getMessage());
+        });
     }
 
     /**
      * Logs a formatted message with marker at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param marker   the marker (ignored)
-     * @param format   the format string (ignored)
-     * @param argArray the arguments (ignored)
+     * @param marker   the marker for classification
+     * @param format   the format string
+     * @param argArray the arguments to be formatted
      */
     @Override
     public void trace(Marker marker, String format, Object... argArray) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.classification(transformMarkerToClassification(marker));
+            log.message(MessageFormatter.arrayFormat(format, argArray).getMessage());
+        });
     }
 
     /**
      * Logs a message with marker and exception at TRACE level.
-     * TRACE level is not supported in the Keel logger system, so this method does nothing.
      *
-     * @param marker the marker (ignored)
-     * @param msg    the message to log (ignored)
-     * @param t      the exception (ignored)
+     * @param marker the marker for classification
+     * @param msg    the message to log
+     * @param t      the exception to log
      */
     @Override
     public void trace(Marker marker, String msg, Throwable t) {
-        // TRACE is not supported in Keel logger system
+        record(log -> {
+            log.level(LogLevel.TRACE);
+            log.classification(transformMarkerToClassification(marker));
+            log.message(msg);
+            log.exception(t);
+        });
     }
 
     /**
@@ -433,7 +458,8 @@ final class KeelSlf4jLogger implements Logger {
 
     /**
      * Transforms an SLF4J Marker into a list of classification strings.
-     * The marker name and all referenced marker names are included in the classification.
+     * The marker name and all referenced marker names are included in the
+     * classification.
      *
      * @param marker the SLF4J marker to transform, may be null
      * @return a list of classification strings, empty if marker is null
