@@ -6,8 +6,24 @@
 
     <groupId>io.github.sinri</groupId>
     <artifactId>keel-logger-ext</artifactId>
-    <version>5.0.0-rc.8</version>
+    <version>5.0.0-rc.9</version>
     <!--    <version>5.0.0-SNAPSHOT</version>-->
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mavenSourcePluginVersion>3.3.1</mavenSourcePluginVersion>
+        <mavenJavadocPluginVersion>3.12.0</mavenJavadocPluginVersion>
+        <mavenCompilerPluginVersion>3.14.1</mavenCompilerPluginVersion>
+        <mavenSurefirePluginVersion>3.5.4</mavenSurefirePluginVersion>
+        <mavenGpgPluginVersion>3.2.8</mavenGpgPluginVersion>
+        <nexusStagingMavenPluginVersion>1.7.0</nexusStagingMavenPluginVersion>
+        <vertxVersion>5.0.5</vertxVersion>
+        <slf4j.version>2.0.17</slf4j.version>
+        <log4j.version>2.24.3</log4j.version>
+        <keelLoggerApiVersion>5.0.0-rc.15</keelLoggerApiVersion>
+    </properties>
 
     <name>Keel-Logger-Ext</name>
     <description>
@@ -172,20 +188,6 @@
         </profile>
     </profiles>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mavenSourcePluginVersion>3.3.1</mavenSourcePluginVersion>
-        <mavenJavadocPluginVersion>3.12.0</mavenJavadocPluginVersion>
-        <mavenCompilerPluginVersion>3.14.1</mavenCompilerPluginVersion>
-        <mavenSurefirePluginVersion>3.5.4</mavenSurefirePluginVersion>
-        <mavenGpgPluginVersion>3.2.8</mavenGpgPluginVersion>
-        <nexusStagingMavenPluginVersion>1.7.0</nexusStagingMavenPluginVersion>
-        <vertxVersion>5.0.5</vertxVersion>
-        <slf4j.version>2.0.17</slf4j.version>
-        <log4j.version>2.24.3</log4j.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -206,7 +208,7 @@
         <dependency>
             <groupId>io.github.sinri</groupId>
             <artifactId>keel-logger-api</artifactId>
-            <version>5.0.0-rc.14</version>
+            <version>${keelLoggerApiVersion}</version>
         </dependency>
     </dependencies>
 
