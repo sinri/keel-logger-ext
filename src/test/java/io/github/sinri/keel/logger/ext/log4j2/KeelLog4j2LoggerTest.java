@@ -29,7 +29,7 @@ public class KeelLog4j2LoggerTest {
         };
         Supplier<LogWriterAdapter> adapterSupplier = () -> adapter;
 
-        KeelLog4j2Logger logger = new KeelLog4j2Logger(adapterSupplier, LogLevel.TRACE, "test-topic", null);
+        KeelLog4j2Logger logger = new KeelLog4j2Logger(adapterSupplier, LogLevel.TRACE, "test-topic", null, true);
 
         logger.logMessage("fqcn", Level.INFO, null, new SimpleMessage("info message"), null);
 
@@ -51,7 +51,7 @@ public class KeelLog4j2LoggerTest {
         };
         Supplier<LogWriterAdapter> adapterSupplier = () -> adapter;
 
-        KeelLog4j2Logger logger = new KeelLog4j2Logger(adapterSupplier, LogLevel.TRACE, "test-topic", null);
+        KeelLog4j2Logger logger = new KeelLog4j2Logger(adapterSupplier, LogLevel.TRACE, "test-topic", null, true);
 
         ThreadContext.put("key", "value");
         try {
@@ -77,7 +77,7 @@ public class KeelLog4j2LoggerTest {
         };
         Supplier<LogWriterAdapter> adapterSupplier = () -> adapter;
 
-        KeelLog4j2Logger logger = new KeelLog4j2Logger(adapterSupplier, LogLevel.TRACE, "test-topic", null);
+        KeelLog4j2Logger logger = new KeelLog4j2Logger(adapterSupplier, LogLevel.TRACE, "test-topic", null, true);
 
         logger.logMessage("fqcn", Level.TRACE, null, new SimpleMessage("trace"), null);
         Assertions.assertEquals(LogLevel.TRACE, logs.get(0).level());

@@ -44,6 +44,8 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
      */
     private final Map<String, Logger> loggerCache = new ConcurrentHashMap<>();
 
+    private final boolean verbose;
+
     /**
      * Constructs a new KeelLoggerFactory with the specified adapter supplier.
      * <p>
@@ -57,9 +59,10 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
      */
     public KeelSlf4jLoggerFactory(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
-            @Nullable Consumer<Log> logInitializer) {
+            @Nullable Consumer<Log> logInitializer, boolean verbose) {
         this.adapterSupplier = adapterSupplier;
         this.logInitializer = logInitializer;
+        this.verbose = verbose;
     }
 
     /**
@@ -89,7 +92,9 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
             synchronized (adapterSupplier) {
                 var logger = new KeelSlf4jLogger(adapterSupplier, LogLevel.INFO, name, logInitializer);
                 //Keel.getLogger().notice("Keel Logging for slf4j built logger for [" + name + "]");
-                System.out.println("Keel Logging for slf4j built logger for [" + name + "]");
+                if (verbose) {
+                    System.out.println("Keel Logging for slf4j built logger for [" + name + "]");
+                }
                 loggerCache.put(name, logger);
                 return logger;
             }

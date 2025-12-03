@@ -36,7 +36,7 @@ public final class KeelLog4j2LoggerContextFactory implements LoggerContextFactor
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @Nullable Consumer<Log> logInitializer) {
-        this.loggerContext = new KeelLog4j2LoggerContext(adapterSupplier, visibleBaseLevel, logInitializer);
+        this.loggerContext = new KeelLog4j2LoggerContext(adapterSupplier, visibleBaseLevel, logInitializer, isVerbose());
     }
 
     @Override
@@ -53,5 +53,9 @@ public final class KeelLog4j2LoggerContextFactory implements LoggerContextFactor
     @Override
     public void removeContext(LoggerContext context) {
         // do nothing
+    }
+
+    public boolean isVerbose() {
+        return System.getProperty("keel.logger.ext.verbose", "false").equalsIgnoreCase("true");
     }
 }

@@ -106,7 +106,11 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      */
     @Override
     public final void initialize() {
-        loggerFactory = new KeelSlf4jLoggerFactory(getAdapterSupplier(), getLogInitializer());
+        loggerFactory = new KeelSlf4jLoggerFactory(getAdapterSupplier(), getLogInitializer(), isVerbose());
+    }
+
+    public boolean isVerbose() {
+        return System.getProperty("keel.logger.ext.verbose", "false").equalsIgnoreCase("true");
     }
 
     /**

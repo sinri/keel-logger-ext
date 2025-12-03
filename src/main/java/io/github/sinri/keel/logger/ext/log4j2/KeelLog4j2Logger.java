@@ -11,6 +11,7 @@ import org.apache.logging.log4j.spi.AbstractLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.PrintWriter;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -25,17 +26,21 @@ final class KeelLog4j2Logger extends AbstractLogger {
     private final LogLevel visibleBaseLevel;
     @Nullable
     private final Consumer<Log> logInitializer;
+    private final boolean verbose;
 
     public KeelLog4j2Logger(
             @NotNull Supplier<LogWriterAdapter> adapterSupplier,
             @NotNull LogLevel visibleBaseLevel,
             @NotNull String topic,
-            @Nullable Consumer<Log> logInitializer) {
+            @Nullable Consumer<Log> logInitializer,
+            boolean verbose
+    ) {
         super(topic, null, null);
         this.adapterSupplier = adapterSupplier;
         this.topic = topic;
         this.visibleBaseLevel = visibleBaseLevel;
         this.logInitializer = logInitializer;
+        this.verbose = verbose;
     }
 
     @NotNull
@@ -194,6 +199,10 @@ final class KeelLog4j2Logger extends AbstractLogger {
         } catch (Exception e) {
             // 忽略上下文获取错误，不影响日志记录
             // 可以考虑记录一个调试级别的错误，但避免递归日志记录
+            if (verbose) {
+                System.err.println("Failed to add thread context to log event: " + e.getMessage());
+                e.printStackTrace(new PrintWriter(System.err));
+            }
         }
     }
 

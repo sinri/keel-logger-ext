@@ -18,7 +18,7 @@ public class KeelSlf4jLoggerFactoryTest {
             }
         };
         Supplier<LogWriterAdapter> adapterSupplier = () -> adapter;
-        KeelSlf4jLoggerFactory factory = new KeelSlf4jLoggerFactory(adapterSupplier, null);
+        KeelSlf4jLoggerFactory factory = new KeelSlf4jLoggerFactory(adapterSupplier, null, true);
 
         Logger logger = factory.getLogger("test-logger");
         Assertions.assertNotNull(logger);
