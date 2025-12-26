@@ -6,8 +6,8 @@
 
     <groupId>io.github.sinri</groupId>
     <artifactId>keel-logger-ext</artifactId>
-    <version>5.0.0-rc.14</version>
-    <!--    <version>5.0.0-SNAPSHOT</version>-->
+    <!--    <version>5.0.0-rc.14</version>-->
+    <version>5.0.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -22,7 +22,7 @@
         <vertxVersion>5.0.6</vertxVersion>
         <slf4j.version>2.0.17</slf4j.version>
         <log4j.version>2.24.3</log4j.version>
-        <keelLoggerApiVersion>5.0.0-rc.20</keelLoggerApiVersion>
+        <keelLoggerApiVersion>5.0.0-rc.20.1</keelLoggerApiVersion>
     </properties>
 
     <name>Keel-Logger-Ext</name>
@@ -194,6 +194,7 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-junit5</artifactId>
             <version>${vertxVersion}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
