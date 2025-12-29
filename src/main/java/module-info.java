@@ -8,7 +8,8 @@ module io.github.sinri.keel.logger.ext {
 
     provides org.apache.logging.log4j.spi.LoggerContextFactory
             with io.github.sinri.keel.logger.ext.log4j2.KeelLog4j2LoggerContextFactory;
-    provides org.slf4j.spi.SLF4JServiceProvider with io.github.sinri.keel.logger.ext.slf4j.KeelSLF4JServiceProvider;
+    provides org.slf4j.spi.SLF4JServiceProvider
+            with io.github.sinri.keel.logger.ext.slf4j.KeelSLF4JServiceProvider;
 
     uses org.apache.logging.log4j.spi.LoggerContextFactory;
     uses org.slf4j.spi.SLF4JServiceProvider;

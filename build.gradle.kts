@@ -22,27 +22,29 @@ val developerOrganizationUrl: String by project
 repositories {
     // Internal Nexus repository for dependencies
     maven {
-        name = "LeqeeNexus"
-        url = uri("https://nexus.leqeegroup.com/repository/public/")
+        name = "InternalNexus"
+        url = uri(findProperty("internalNexusPublicUrl") as String)
         credentials {
-            username = findProperty("leqeeNexusUsername") as String? ?: System.getenv("NEXUS_USERNAME")
-            password = findProperty("leqeeNexusPassword") as String? ?: System.getenv("NEXUS_PASSWORD")
+            username = findProperty("internalNexusUsername") as String
+            password = findProperty("internalNexusPassword") as String
         }
         // Allow insecure protocol if needed (not recommended for production)
         // isAllowInsecureProtocol = false
     }
 
-    // mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
     // Main dependencies
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("org.apache.logging.log4j:log4j-api:2.24.3")
-    implementation("io.github.sinri:keel-logger-api:5.0.0-rc.20.1")
+    implementation("io.github.sinri:keel-logger-api:5.0.0-rc.21")
 
     // Test dependencies
     testImplementation("io.vertx:vertx-junit5:5.0.6")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 java {
@@ -129,13 +131,13 @@ publishing {
         maven {
             name = "Internal"
             url = if (version.toString().endsWith("SNAPSHOT")) {
-                uri("https://nexus.leqeegroup.com/repository/snapshots/")
+                uri(findProperty("internalNexusSnapshotsUrl") as String)
             } else {
-                uri("https://nexus.leqeegroup.com/repository/releases/")
+                uri(findProperty("internalNexusReleasesUrl") as String)
             }
             credentials {
-                username = findProperty("leqeeNexusUsername") as String? ?: System.getenv("NEXUS_USERNAME")
-                password = findProperty("leqeeNexusPassword") as String? ?: System.getenv("NEXUS_PASSWORD")
+                username = findProperty("internalNexusUsername") as String
+                password = findProperty("internalNexusPassword") as String
             }
         }
 
@@ -144,10 +146,10 @@ publishing {
             name = "Release"
 
             if (version.toString().endsWith("SNAPSHOT")) {
-                url = uri("https://nexus.leqeegroup.com/repository/snapshots/")
+                url = uri(findProperty("internalNexusSnapshotsUrl") as String)
                 credentials {
-                    username = findProperty("leqeeNexusUsername") as String? ?: System.getenv("NEXUS_USERNAME")
-                    password = findProperty("leqeeNexusPassword") as String? ?: System.getenv("NEXUS_PASSWORD")
+                    username = findProperty("internalNexusUsername") as String
+                    password = findProperty("internalNexusPassword") as String
                 }
             } else {
                 url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
