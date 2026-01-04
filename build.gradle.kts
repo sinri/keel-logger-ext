@@ -18,6 +18,11 @@ val developerName: String by project
 val developerEmail: String by project
 val developerOrganization: String by project
 val developerOrganizationUrl: String by project
+val jspecifyVersion: String by project
+val vertxVersion: String by project
+val slf4jApiVersion: String by project
+val log4jApiVersion: String by project
+val keelLoggerApiVersion: String by project
 
 repositories {
     // Internal Nexus repository for dependencies
@@ -37,13 +42,17 @@ repositories {
 
 dependencies {
     // Main dependencies
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("org.apache.logging.log4j:log4j-api:2.24.3")
-    implementation("io.github.sinri:keel-logger-api:5.0.0-rc.21")
+    implementation("org.slf4j:slf4j-api:$slf4jApiVersion")
+    implementation("org.apache.logging.log4j:log4j-api:$log4jApiVersion")
+    implementation("io.github.sinri:keel-logger-api:$keelLoggerApiVersion")
+
+    // API dependency (transitive)
+    // https://mvnrepository.com/artifact/org.jspecify/jspecify
+    compileOnly("org.jspecify:jspecify:$jspecifyVersion")
+    testCompileOnly("org.jspecify:jspecify:$jspecifyVersion")
 
     // Test dependencies
-    testImplementation("io.vertx:vertx-junit5:5.0.6")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testImplementation("io.vertx:vertx-junit5:$vertxVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
