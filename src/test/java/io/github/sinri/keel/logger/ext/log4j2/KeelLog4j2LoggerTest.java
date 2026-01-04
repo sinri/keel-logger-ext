@@ -7,6 +7,7 @@ import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.message.SimpleMessage;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@NullMarked
 public class KeelLog4j2LoggerTest {
 
     @Test

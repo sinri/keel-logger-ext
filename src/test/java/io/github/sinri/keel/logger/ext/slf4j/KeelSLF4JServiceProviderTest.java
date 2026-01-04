@@ -1,8 +1,10 @@
 package io.github.sinri.keel.logger.ext.slf4j;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@NullMarked
 public class KeelSLF4JServiceProviderTest {
 
     @Test

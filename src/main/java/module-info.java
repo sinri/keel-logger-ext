@@ -1,7 +1,8 @@
 module io.github.sinri.keel.logger.ext {
-    requires io.github.sinri.keel.logger.api;
+    requires transitive io.github.sinri.keel.logger.api;
     requires org.apache.logging.log4j;
     requires org.slf4j;
+    requires static org.jspecify;
 
     exports io.github.sinri.keel.logger.ext.slf4j;
     exports io.github.sinri.keel.logger.ext.log4j2;

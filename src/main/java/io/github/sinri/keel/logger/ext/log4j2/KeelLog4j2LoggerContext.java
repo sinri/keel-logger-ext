@@ -6,8 +6,8 @@ import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,19 +19,18 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
+@NullMarked
 final class KeelLog4j2LoggerContext implements LoggerContext {
     private final Map<String, KeelLog4j2Logger> loggerMap;
-    @NotNull
     private final Supplier<LogWriterAdapter> adapterSupplier;
-    @NotNull
     private final LogLevel visibleBaseLevel;
     @Nullable
     private final Consumer<Log> logInitializer;
     private final boolean verbose;
 
     public KeelLog4j2LoggerContext(
-            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
-            @NotNull LogLevel visibleBaseLevel,
+            Supplier<LogWriterAdapter> adapterSupplier,
+            LogLevel visibleBaseLevel,
             @Nullable Consumer<Log> logInitializer,
             boolean verbose
     ) {

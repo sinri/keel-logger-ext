@@ -3,12 +3,14 @@ package io.github.sinri.keel.logger.ext;
 import io.github.sinri.keel.logger.ext.log4j2.KeelLog4j2LoggerContextFactory;
 import io.github.sinri.keel.logger.ext.slf4j.KeelSLF4JServiceProvider;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.spi.SLF4JServiceProvider;
 
 import java.util.ServiceLoader;
 
+@NullMarked
 public class SpiTest {
 
     @Test

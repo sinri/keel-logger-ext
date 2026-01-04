@@ -3,8 +3,8 @@ package io.github.sinri.keel.logger.ext.slf4j;
 import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import io.github.sinri.keel.logger.api.log.Log;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
@@ -21,6 +21,7 @@ import java.util.function.Supplier;
  * @see ILoggerFactory
  * @since 5.0.0
  */
+@NullMarked
 final class KeelSlf4jLoggerFactory implements ILoggerFactory {
 
     /**
@@ -30,7 +31,6 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
      * The same supplier instance is shared among all loggers created by this factory, enabling
      * consistent logging behavior across the application.
      */
-    @NotNull
     private final Supplier<LogWriterAdapter> adapterSupplier;
     @Nullable
     private final Consumer<Log> logInitializer;
@@ -58,7 +58,7 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
      * @throws NullPointerException if adapterSupplier is null
      */
     public KeelSlf4jLoggerFactory(
-            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
+            Supplier<LogWriterAdapter> adapterSupplier,
             @Nullable Consumer<Log> logInitializer, boolean verbose) {
         this.adapterSupplier = adapterSupplier;
         this.logInitializer = logInitializer;

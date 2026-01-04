@@ -2,12 +2,14 @@ package io.github.sinri.keel.logger.ext.slf4j;
 
 import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
 
+@NullMarked
 public class KeelSlf4jLoggerFactoryTest {
 
     @Test

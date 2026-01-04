@@ -3,8 +3,8 @@ package io.github.sinri.keel.logger.ext.slf4j;
 import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import io.github.sinri.keel.logger.api.log.Log;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
@@ -31,6 +31,7 @@ import java.util.function.Supplier;
  * @see KeelSlf4jLogger
  * @since 5.0.0
  */
+@NullMarked
 public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
     /**
      * Keel 日志记录器工厂实例。
@@ -125,7 +126,6 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      *
      * @return 提供 {@link LogWriterAdapter} 实例的供应者。
      */
-    @NotNull
     protected Supplier<LogWriterAdapter> getAdapterSupplier() {
         return BaseLogWriter::getInstance;
     }

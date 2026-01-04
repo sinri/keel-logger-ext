@@ -4,12 +4,14 @@ import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import org.apache.logging.log4j.spi.LoggerContext;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.function.Supplier;
 
+@NullMarked
 public class KeelLog4j2LoggerContextFactoryTest {
 
     @Test

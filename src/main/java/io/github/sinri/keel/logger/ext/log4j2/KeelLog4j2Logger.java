@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.spi.AbstractLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.util.function.Consumer;
@@ -20,6 +20,7 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
+@NullMarked
 final class KeelLog4j2Logger extends AbstractLogger {
     private final Supplier<LogWriterAdapter> adapterSupplier;
     private final String topic;
@@ -29,9 +30,9 @@ final class KeelLog4j2Logger extends AbstractLogger {
     private final boolean verbose;
 
     public KeelLog4j2Logger(
-            @NotNull Supplier<LogWriterAdapter> adapterSupplier,
-            @NotNull LogLevel visibleBaseLevel,
-            @NotNull String topic,
+            Supplier<LogWriterAdapter> adapterSupplier,
+            LogLevel visibleBaseLevel,
+            String topic,
             @Nullable Consumer<Log> logInitializer,
             boolean verbose
     ) {
@@ -43,7 +44,6 @@ final class KeelLog4j2Logger extends AbstractLogger {
         this.verbose = verbose;
     }
 
-    @NotNull
     private static LogLevel transLevel(Level level) {
         if (level == Level.TRACE || level == Level.ALL) {
             return LogLevel.TRACE;
@@ -64,7 +64,6 @@ final class KeelLog4j2Logger extends AbstractLogger {
         }
     }
 
-    @NotNull
     private static Level transLevel(@Nullable LogLevel level) {
         if (level == null) return Level.OFF;
         return switch (level) {

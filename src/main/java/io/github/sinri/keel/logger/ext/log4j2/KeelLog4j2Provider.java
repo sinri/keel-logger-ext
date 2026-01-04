@@ -6,8 +6,8 @@ import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import io.github.sinri.keel.logger.api.log.Log;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.apache.logging.log4j.spi.Provider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -20,6 +20,7 @@ import java.util.function.Supplier;
  * @deprecated 最新的用法已不需要通过本类实现 SPI；直接以 {@link KeelLog4j2LoggerContextFactory}实现 SPI。
  */
 @Deprecated(since = "5.0.0")
+@NullMarked
 public class KeelLog4j2Provider extends Provider {
     public static final int DEFAULT_PRIORITY = 50;
     public static final String DEFAULT_VERSIONS = "2.x";
@@ -33,7 +34,6 @@ public class KeelLog4j2Provider extends Provider {
         super(priority, versions);
     }
 
-    @NotNull
     @Override
     public LoggerContextFactory getLoggerContextFactory() {
         if (loggerContextFactory == null) {
@@ -66,7 +66,6 @@ public class KeelLog4j2Provider extends Provider {
      *
      * @return the minimum {@link LogLevel} that will be processed
      */
-    @NotNull
     protected LogLevel getVisibleBaseLevel() {
         return LogLevel.INFO;
     }
@@ -80,7 +79,6 @@ public class KeelLog4j2Provider extends Provider {
      *
      * @return the adapter supplier
      */
-    @NotNull
     protected Supplier<LogWriterAdapter> getAdapterSupplier() {
         return BaseLogWriter::getInstance;
     }
