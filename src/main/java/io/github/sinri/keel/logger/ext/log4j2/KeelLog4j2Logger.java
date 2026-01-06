@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.spi.AbstractLogger;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.PrintWriter;
@@ -20,13 +19,11 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
-@NullMarked
 final class KeelLog4j2Logger extends AbstractLogger {
     private final Supplier<LogWriterAdapter> adapterSupplier;
     private final String topic;
     private final LogLevel visibleBaseLevel;
-    @Nullable
-    private final Consumer<Log> logInitializer;
+    private final @Nullable Consumer<Log> logInitializer;
     private final boolean verbose;
 
     public KeelLog4j2Logger(

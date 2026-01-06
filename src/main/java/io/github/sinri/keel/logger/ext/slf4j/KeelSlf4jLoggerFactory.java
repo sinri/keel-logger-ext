@@ -32,8 +32,7 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
      * consistent logging behavior across the application.
      */
     private final Supplier<LogWriterAdapter> adapterSupplier;
-    @Nullable
-    private final Consumer<Log> logInitializer;
+    private final @Nullable Consumer<Log> logInitializer;
 
     /**
      * Cache for storing created logger instances to ensure singleton behavior per logger name.

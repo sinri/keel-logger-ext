@@ -3,7 +3,6 @@ package io.github.sinri.keel.logger.ext.slf4j;
 import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import io.github.sinri.keel.logger.api.log.Log;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -21,7 +20,6 @@ import java.util.function.Supplier;
  *
  * @since 5.0.0
  */
-@NullMarked
 final class KeelSlf4jLogger implements Logger {
     /**
      * Supplier for obtaining the issue recorder adapter used to handle log events.
@@ -40,8 +38,7 @@ final class KeelSlf4jLogger implements Logger {
      * Log events below this level will be filtered out.
      */
     private final LogLevel visibleBaseLevel;
-    @Nullable
-    private final Consumer<Log> logInitializer;
+    private final @Nullable Consumer<Log> logInitializer;
 
     /**
      * Constructs a new KeelSlf4jLogger instance.
@@ -461,7 +458,7 @@ final class KeelSlf4jLogger implements Logger {
      * @param marker the SLF4J marker to transform, may be null
      * @return a list of classification strings, empty if marker is null
      */
-    private List<String> transformMarkerToClassification(Marker marker) {
+    private List<String> transformMarkerToClassification(@Nullable Marker marker) {
         List<String> classification = new ArrayList<>();
         if (marker != null) {
             classification.add(marker.getName());

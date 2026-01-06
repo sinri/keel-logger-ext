@@ -24,8 +24,7 @@ final class KeelLog4j2LoggerContext implements LoggerContext {
     private final Map<String, KeelLog4j2Logger> loggerMap;
     private final Supplier<LogWriterAdapter> adapterSupplier;
     private final LogLevel visibleBaseLevel;
-    @Nullable
-    private final Consumer<Log> logInitializer;
+    private final @Nullable Consumer<Log> logInitializer;
     private final boolean verbose;
 
     public KeelLog4j2LoggerContext(
@@ -42,7 +41,7 @@ final class KeelLog4j2LoggerContext implements LoggerContext {
     }
 
     @Override
-    public Object getExternalContext() {
+    public @Nullable Object getExternalContext() {
         return null;
     }
 
