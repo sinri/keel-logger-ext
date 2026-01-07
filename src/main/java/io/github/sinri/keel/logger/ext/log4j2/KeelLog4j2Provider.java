@@ -1,5 +1,6 @@
 package io.github.sinri.keel.logger.ext.log4j2;
 
+import io.github.sinri.keel.logger.api.LateObject;
 import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
 public class KeelLog4j2Provider extends Provider {
     public static final int DEFAULT_PRIORITY = 50;
     public static final String DEFAULT_VERSIONS = "2.x";
-    private volatile KeelLog4j2LoggerContextFactory loggerContextFactory;
+    private final LateObject<KeelLog4j2LoggerContextFactory> lateLoggerContextFactory = new LateObject<>();
 
     public KeelLog4j2Provider() {
         this(DEFAULT_PRIORITY, DEFAULT_VERSIONS);
@@ -36,18 +37,11 @@ public class KeelLog4j2Provider extends Provider {
 
     @Override
     public LoggerContextFactory getLoggerContextFactory() {
-        if (loggerContextFactory == null) {
-            synchronized (this) {
-                if (loggerContextFactory == null) {
-                    loggerContextFactory = new KeelLog4j2LoggerContextFactory(
-                            getAdapterSupplier(),
-                            getVisibleBaseLevel(),
-                            getLogInitializer()
-                    );
-                }
-            }
-        }
-        return loggerContextFactory;
+        return lateLoggerContextFactory.ensure(() -> new KeelLog4j2LoggerContextFactory(
+                getAdapterSupplier(),
+                getVisibleBaseLevel(),
+                getLogInitializer()
+        ));
     }
 
     @Override

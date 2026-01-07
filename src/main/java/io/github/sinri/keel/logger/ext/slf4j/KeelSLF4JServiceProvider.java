@@ -1,10 +1,12 @@
 package io.github.sinri.keel.logger.ext.slf4j;
 
+import io.github.sinri.keel.logger.api.LateObject;
 import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import io.github.sinri.keel.logger.api.log.Log;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.ILoggerFactory;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
@@ -38,7 +40,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * <p>
      * 在 {@link #initialize()} 方法中初始化，负责创建和缓存 {@link KeelSlf4jLogger} 实例。
      */
-    private KeelSlf4jLoggerFactory loggerFactory;
+    private final LateObject<KeelSlf4jLoggerFactory> lateLoggerFactory = new LateObject<>();
 
     /**
      * 获取日志记录器工厂实例。
@@ -48,8 +50,8 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * @return Keel 日志记录器工厂实例
      */
     @Override
-    public final KeelSlf4jLoggerFactory getLoggerFactory() {
-        return loggerFactory;
+    public final ILoggerFactory getLoggerFactory() {
+        return lateLoggerFactory.get();
     }
 
     /**
@@ -62,7 +64,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * @return {@code null} - 不支持标记功能
      */
     @Override
-    public IMarkerFactory getMarkerFactory() {
+    public @Nullable IMarkerFactory getMarkerFactory() {
         return null;
     }
 
@@ -78,7 +80,7 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      * @return {@code null} - 不支持 MDC 功能
      */
     @Override
-    public MDCAdapter getMDCAdapter() {
+    public @Nullable MDCAdapter getMDCAdapter() {
         return null;
     }
 
@@ -107,7 +109,8 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
      */
     @Override
     public final void initialize() {
-        loggerFactory = new KeelSlf4jLoggerFactory(getAdapterSupplier(), getLogInitializer(), isVerbose());
+        var loggerFactory = new KeelSlf4jLoggerFactory(getAdapterSupplier(), getLogInitializer(), isVerbose());
+        lateLoggerFactory.set(loggerFactory);
     }
 
     public boolean isVerbose() {
