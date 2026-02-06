@@ -14,38 +14,42 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 在 Keel 日志体系下封装实现的 slf4j 体系日志记录器。
+ * 在 Keel 日志系统中封装实现的 SLF4J 日志记录器。
  * <p>
- * {@link Marker} 尚未实现，相关参数不起作用。
+ * SLF4J 的 {@link Marker} 会被转换为 Keel 的 classification（分类）信息。
  *
  * @since 5.0.0
  */
 final class KeelSlf4jLogger implements Logger {
     /**
-     * Supplier for obtaining the issue recorder adapter used to handle log events.
-     * This allows for lazy initialization and dynamic adapter switching.
+     * 用于获取 {@link LogWriterAdapter} 的供应者。
+     * <p>
+     * 通过供应者可以实现延迟初始化以及运行期的适配器切换。
      */
     private final Supplier<LogWriterAdapter> adapterSupplier;
 
     /**
-     * The topic/name of this logger instance, typically representing the class or
-     * component being logged.
+     * 当前日志记录器的主题（topic）/名称。
+     * <p>
+     * 通常使用类名或组件标识。
      */
     private final String topic;
 
     /**
-     * The minimum log level that will be processed by this logger.
-     * Log events below this level will be filtered out.
+     * 对外可见的基础级别（最小处理级别）。
+     * <p>
+     * 低于该级别的日志事件会被过滤。
      */
     private final LogLevel visibleBaseLevel;
     private final @Nullable Consumer<Log> logInitializer;
 
     /**
-     * Constructs a new KeelSlf4jLogger instance.
+     * 创建一个 SLF4J 日志记录器实例。
      *
-     * @param adapterSupplier  supplier for obtaining the issue recorder adapter
-     * @param visibleBaseLevel the minimum log level that will be processed
-     * @param topic            the name/topic of this logger instance
+     * @param adapterSupplier  用于获取日志写入适配器的供应者
+     * @param visibleBaseLevel 对外可见的基础级别（最小处理级别）
+     * @param topic            日志主题（topic）/名称
+     * @param logInitializer   写入前用于初始化 {@link Log} 的钩子；可为 null
      */
     KeelSlf4jLogger(
             Supplier<LogWriterAdapter> adapterSupplier,
@@ -59,9 +63,9 @@ final class KeelSlf4jLogger implements Logger {
     }
 
     /**
-     * Returns the name of this logger instance.
+     * 获取日志记录器名称。
      *
-     * @return the logger name/topic
+     * @return 日志主题（topic）/名称
      */
     @Override
     public String getName() {
@@ -69,9 +73,9 @@ final class KeelSlf4jLogger implements Logger {
     }
 
     /**
-     * Gets the minimum log level that will be processed by this logger.
+     * 获取对外可见的基础级别（最小处理级别）。
      *
-     * @return the visible base log level
+     * @return 对外可见的基础级别
      */
     private LogLevel getVisibleBaseLevel() {
         return visibleBaseLevel;
@@ -86,11 +90,11 @@ final class KeelSlf4jLogger implements Logger {
     }
 
     /**
-     * Record an issue (created with `issueRecordBuilder` and modified with
-     * `issueHandler`).
-     * It may be handled later async, actually.
+     * 记录一条日志事件（先创建模板，再由处理器补充字段）。
+     * <p>
+     * 适配器内部可能以异步方式处理实际写入。
      *
-     * @param issueHandler the handler to modify the base issue.
+     * @param issueHandler 用于补充/修改日志事件的处理器
      */
     private void record(Consumer<Log> issueHandler) {
         Log issue = createIssueRecordTemplate();
@@ -104,21 +108,11 @@ final class KeelSlf4jLogger implements Logger {
         }
     }
 
-    /**
-     * Checks if TRACE level logging is enabled.
-     *
-     * @return true if TRACE level is enabled based on the visible base level
-     */
     @Override
     public boolean isTraceEnabled() {
         return LogLevel.TRACE.isEnoughSeriousAs(getVisibleBaseLevel());
     }
 
-    /**
-     * Logs a message at TRACE level.
-     *
-     * @param msg the message to log
-     */
     @Override
     public void trace(String msg) {
         record(log -> {
@@ -127,12 +121,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at TRACE level.
-     *
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void trace(String format, Object arg) {
         record(log -> {
@@ -141,13 +129,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at TRACE level.
-     *
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void trace(String format, Object arg1, Object arg2) {
         record(log -> {
@@ -156,12 +137,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at TRACE level.
-     *
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void trace(String format, Object... arguments) {
         record(log -> {
@@ -170,12 +145,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with an exception at TRACE level.
-     *
-     * @param msg the message to log
-     * @param t   the exception to log
-     */
     @Override
     public void trace(String msg, Throwable t) {
         record(log -> {
@@ -185,23 +154,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if TRACE level logging is enabled for the given marker.
-     *
-     * @param marker the marker (currently ignored in level determination)
-     * @return true if TRACE level is enabled based on the visible base level
-     */
     @Override
     public boolean isTraceEnabled(Marker marker) {
         return isTraceEnabled();
     }
 
-    /**
-     * Logs a message with marker at TRACE level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     */
     @Override
     public void trace(Marker marker, String msg) {
         record(log -> {
@@ -211,13 +168,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at TRACE level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void trace(Marker marker, String format, Object arg) {
         record(log -> {
@@ -227,14 +177,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at TRACE level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void trace(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
@@ -244,13 +186,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at TRACE level.
-     *
-     * @param marker   the marker for classification
-     * @param format   the format string
-     * @param argArray the arguments to be formatted
-     */
     @Override
     public void trace(Marker marker, String format, Object... argArray) {
         record(log -> {
@@ -260,13 +195,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with marker and exception at TRACE level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     * @param t      the exception to log
-     */
     @Override
     public void trace(Marker marker, String msg, Throwable t) {
         record(log -> {
@@ -277,21 +205,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if DEBUG level logging is enabled.
-     *
-     * @return true if DEBUG level is enabled based on the visible base level
-     */
     @Override
     public boolean isDebugEnabled() {
         return LogLevel.DEBUG.isEnoughSeriousAs(getVisibleBaseLevel());
     }
 
-    /**
-     * Logs a message at DEBUG level.
-     *
-     * @param msg the message to log
-     */
     @Override
     public void debug(String msg) {
         record(log -> {
@@ -300,12 +218,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at DEBUG level.
-     *
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void debug(String format, Object arg) {
         record(log -> {
@@ -314,13 +226,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at DEBUG level.
-     *
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void debug(String format, Object arg1, Object arg2) {
         record(log -> {
@@ -329,12 +234,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at DEBUG level.
-     *
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void debug(String format, Object... arguments) {
         record(log -> {
@@ -343,12 +242,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with an exception at DEBUG level.
-     *
-     * @param msg the message to log
-     * @param t   the exception to log
-     */
     @Override
     public void debug(String msg, Throwable t) {
         record(log -> {
@@ -358,23 +251,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if DEBUG level logging is enabled for the given marker.
-     *
-     * @param marker the marker (currently ignored in level determination)
-     * @return true if DEBUG level is enabled based on the visible base level
-     */
     @Override
     public boolean isDebugEnabled(Marker marker) {
         return isDebugEnabled();
     }
 
-    /**
-     * Logs a message with marker at DEBUG level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     */
     @Override
     public void debug(Marker marker, String msg) {
         record(log -> {
@@ -384,13 +265,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at DEBUG level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void debug(Marker marker, String format, Object arg) {
         record(log -> {
@@ -400,14 +274,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at DEBUG level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void debug(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
@@ -417,13 +283,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at DEBUG level.
-     *
-     * @param marker    the marker for classification
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void debug(Marker marker, String format, Object... arguments) {
         record(log -> {
@@ -433,13 +292,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with marker and exception at DEBUG level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     * @param t      the exception to log
-     */
     @Override
     public void debug(Marker marker, String msg, Throwable t) {
         record(log -> {
@@ -451,12 +303,12 @@ final class KeelSlf4jLogger implements Logger {
     }
 
     /**
-     * Transforms an SLF4J Marker into a list of classification strings.
-     * The marker name and all referenced marker names are included in the
-     * classification.
+     * 将 SLF4J {@link Marker} 转换为 Keel 的 classification（分类）列表。
+     * <p>
+     * 返回值包含标记自身名称以及其引用的所有标记名称；当 marker 为 null 时返回空列表。
      *
-     * @param marker the SLF4J marker to transform, may be null
-     * @return a list of classification strings, empty if marker is null
+     * @param marker SLF4J 标记；可为 null
+     * @return classification（分类）列表
      */
     private List<String> transformMarkerToClassification(@Nullable Marker marker) {
         List<String> classification = new ArrayList<>();
@@ -471,21 +323,11 @@ final class KeelSlf4jLogger implements Logger {
         return classification;
     }
 
-    /**
-     * Checks if INFO level logging is enabled.
-     *
-     * @return true if INFO level is enabled based on the visible base level
-     */
     @Override
     public boolean isInfoEnabled() {
         return LogLevel.INFO.isEnoughSeriousAs(getVisibleBaseLevel());
     }
 
-    /**
-     * Logs a message at INFO level.
-     *
-     * @param msg the message to log
-     */
     @Override
     public void info(String msg) {
         record(log -> {
@@ -494,12 +336,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at INFO level.
-     *
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void info(String format, Object arg) {
         record(log -> {
@@ -508,13 +344,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at INFO level.
-     *
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void info(String format, Object arg1, Object arg2) {
         record(log -> {
@@ -523,12 +352,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at INFO level.
-     *
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void info(String format, Object... arguments) {
         record(log -> {
@@ -537,12 +360,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with an exception at INFO level.
-     *
-     * @param msg the message to log
-     * @param t   the exception to log
-     */
     @Override
     public void info(String msg, Throwable t) {
         record(log -> {
@@ -552,23 +369,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if INFO level logging is enabled for the given marker.
-     *
-     * @param marker the marker (currently ignored in level determination)
-     * @return true if INFO level is enabled based on the visible base level
-     */
     @Override
     public boolean isInfoEnabled(Marker marker) {
         return isInfoEnabled();
     }
 
-    /**
-     * Logs a message with marker at INFO level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     */
     @Override
     public void info(Marker marker, String msg) {
         record(log -> {
@@ -578,13 +383,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at INFO level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void info(Marker marker, String format, Object arg) {
         record(log -> {
@@ -594,14 +392,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at INFO level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void info(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
@@ -611,13 +401,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at INFO level.
-     *
-     * @param marker    the marker for classification
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void info(Marker marker, String format, Object... arguments) {
         record(log -> {
@@ -627,13 +410,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with marker and exception at INFO level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     * @param t      the exception to log
-     */
     @Override
     public void info(Marker marker, String msg, Throwable t) {
         record(log -> {
@@ -644,21 +420,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if WARN level logging is enabled.
-     *
-     * @return true if WARN level is enabled based on the visible base level
-     */
     @Override
     public boolean isWarnEnabled() {
         return LogLevel.WARNING.isEnoughSeriousAs(getVisibleBaseLevel());
     }
 
-    /**
-     * Logs a message at WARN level.
-     *
-     * @param msg the message to log
-     */
     @Override
     public void warn(String msg) {
         record(log -> {
@@ -667,12 +433,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at WARN level.
-     *
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void warn(String format, Object arg) {
         record(log -> {
@@ -681,12 +441,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at WARN level.
-     *
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void warn(String format, Object... arguments) {
         record(log -> {
@@ -695,13 +449,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at WARN level.
-     *
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void warn(String format, Object arg1, Object arg2) {
         record(log -> {
@@ -710,12 +457,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with an exception at WARN level.
-     *
-     * @param msg the message to log
-     * @param t   the exception to log
-     */
     @Override
     public void warn(String msg, Throwable t) {
         record(log -> {
@@ -725,23 +466,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if WARN level logging is enabled for the given marker.
-     *
-     * @param marker the marker (currently ignored in level determination)
-     * @return true if WARN level is enabled based on the visible base level
-     */
     @Override
     public boolean isWarnEnabled(Marker marker) {
         return isWarnEnabled();
     }
 
-    /**
-     * Logs a message with marker at WARN level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     */
     @Override
     public void warn(Marker marker, String msg) {
         record(log -> {
@@ -751,13 +480,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at WARN level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void warn(Marker marker, String format, Object arg) {
         record(log -> {
@@ -767,14 +489,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at WARN level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void warn(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
@@ -784,13 +498,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at WARN level.
-     *
-     * @param marker    the marker for classification
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void warn(Marker marker, String format, Object... arguments) {
         record(log -> {
@@ -800,13 +507,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with marker and exception at WARN level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     * @param t      the exception to log
-     */
     @Override
     public void warn(Marker marker, String msg, Throwable t) {
         record(log -> {
@@ -817,21 +517,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if ERROR level logging is enabled.
-     *
-     * @return true if ERROR level is enabled based on the visible base level
-     */
     @Override
     public boolean isErrorEnabled() {
         return LogLevel.ERROR.isEnoughSeriousAs(this.getVisibleBaseLevel());
     }
 
-    /**
-     * Logs a message at ERROR level.
-     *
-     * @param msg the message to log
-     */
     @Override
     public void error(String msg) {
         record(log -> {
@@ -840,12 +530,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at ERROR level.
-     *
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void error(String format, Object arg) {
         record(log -> {
@@ -854,13 +538,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at ERROR level.
-     *
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void error(String format, Object arg1, Object arg2) {
         record(log -> {
@@ -869,12 +546,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message at ERROR level.
-     *
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void error(String format, Object... arguments) {
         record(log -> {
@@ -883,12 +554,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with an exception at ERROR level.
-     *
-     * @param msg the message to log
-     * @param t   the exception to log
-     */
     @Override
     public void error(String msg, Throwable t) {
         record(log -> {
@@ -898,23 +563,11 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Checks if ERROR level logging is enabled for the given marker.
-     *
-     * @param marker the marker (currently ignored in level determination)
-     * @return true if ERROR level is enabled based on the visible base level
-     */
     @Override
     public boolean isErrorEnabled(Marker marker) {
         return isErrorEnabled();
     }
 
-    /**
-     * Logs a message with marker at ERROR level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     */
     @Override
     public void error(Marker marker, String msg) {
         record(log -> {
@@ -924,13 +577,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at ERROR level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg    the argument to be formatted
-     */
     @Override
     public void error(Marker marker, String format, Object arg) {
         record(log -> {
@@ -940,14 +586,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at ERROR level.
-     *
-     * @param marker the marker for classification
-     * @param format the format string
-     * @param arg1   the first argument to be formatted
-     * @param arg2   the second argument to be formatted
-     */
     @Override
     public void error(Marker marker, String format, Object arg1, Object arg2) {
         record(log -> {
@@ -957,13 +595,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a formatted message with marker at ERROR level.
-     *
-     * @param marker    the marker for classification
-     * @param format    the format string
-     * @param arguments the arguments to be formatted
-     */
     @Override
     public void error(Marker marker, String format, Object... arguments) {
         record(log -> {
@@ -973,13 +604,6 @@ final class KeelSlf4jLogger implements Logger {
         });
     }
 
-    /**
-     * Logs a message with marker and exception at ERROR level.
-     *
-     * @param marker the marker for classification
-     * @param msg    the message to log
-     * @param t      the exception to log
-     */
     @Override
     public void error(Marker marker, String msg, Throwable t) {
         record(log -> {

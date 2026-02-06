@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 
 /**
- * 在 Keel 日志体系下封装实现的 slf4j 体系日志记录器工厂。
+ * 在 Keel 日志系统中封装实现的 SLF4J 日志记录器工厂。
  *
  * @see KeelSlf4jLogger
  * @see ILoggerFactory
@@ -25,36 +25,34 @@ import java.util.function.Supplier;
 final class KeelSlf4jLoggerFactory implements ILoggerFactory {
 
     /**
-     * Supplier for obtaining the {@link LogWriterAdapter} instance used by created loggers.
+     * 用于获取 {@link LogWriterAdapter} 实例的供应者。
      * <p>
-     * This supplier allows for lazy initialization and dynamic configuration of the logging backend.
-     * The same supplier instance is shared among all loggers created by this factory, enabling
-     * consistent logging behavior across the application.
+     * 通过供应者可以实现延迟初始化以及运行期的后端适配器切换。
+     * 工厂创建的所有日志记录器共享同一个供应者，从而保持一致的输出行为。
      */
     private final Supplier<LogWriterAdapter> adapterSupplier;
     private final @Nullable Consumer<Log> logInitializer;
 
     /**
-     * Cache for storing created logger instances to ensure singleton behavior per logger name.
+     * 日志记录器缓存（按名称唯一）。
      * <p>
-     * This cache prevents the creation of multiple logger instances for the same name,
-     * which is a requirement of the SLF4J specification. The cache uses an everlasting
-     * strategy, meaning logger instances are retained for the lifetime of the factory.
+     * 按 SLF4J 规范要求：对同一个名称，多次获取应返回同一个 Logger 实例。
+     * 这里使用常驻缓存策略，实例会在工厂生命周期内一直保留。
      */
     private final Map<String, Logger> loggerCache = new ConcurrentHashMap<>();
 
     private final boolean verbose;
 
     /**
-     * Constructs a new KeelLoggerFactory with the specified adapter supplier.
+     * 创建日志记录器工厂。
      * <p>
-     * The adapter supplier will be used to obtain {@link LogWriterAdapter} instances
-     * for all loggers created by this factory. The supplier should return a consistent
-     * adapter instance or instances with compatible configuration.
+     * 工厂创建的所有日志记录器都会通过该供应者获取 {@link LogWriterAdapter}，
+     * 供应者应返回可用的适配器实例（建议保持配置一致）。
      *
-     * @param adapterSupplier the supplier for obtaining issue recorder adapter instances;
-     *                        must not be null and should return non-null adapters
-     * @throws NullPointerException if adapterSupplier is null
+     * @param adapterSupplier 用于获取日志写入适配器实例的供应者；不可为 null，且应返回非 null 的适配器
+     * @param logInitializer  写入前用于初始化 {@link Log} 的钩子；可为 null
+     * @param verbose         是否输出调试信息到标准输出
+     * @throws NullPointerException 当 adapterSupplier 为 null 时抛出
      */
     public KeelSlf4jLoggerFactory(
             Supplier<LogWriterAdapter> adapterSupplier,
@@ -65,23 +63,21 @@ final class KeelSlf4jLoggerFactory implements ILoggerFactory {
     }
 
     /**
-     * Returns a logger instance for the specified name.
+     * 获取指定名称的日志记录器实例。
      * <p>
-     * This method implements the SLF4J contract by returning the same logger instance
-     * for multiple calls with the same name. If a logger with the given name doesn't
-     * exist in the cache, a new {@link KeelSlf4jLogger} instance is created with:
+     * 按 SLF4J 约定：对同一个名称，多次调用必须返回同一个 Logger 实例。
+     * 若缓存中不存在，则创建新的 {@link KeelSlf4jLogger}，并使用：
      * <ul>
-     *   <li>The configured adapter supplier</li>
-     *   <li>A default log level of {@link LogLevel#INFO}</li>
-     *   <li>The provided name as the logger topic</li>
+     *   <li>配置好的适配器供应者</li>
+     *   <li>默认可见基础级别 {@link LogLevel#INFO}</li>
+     *   <li>传入的名称作为日志主题（topic）</li>
      * </ul>
      * <p>
-     * <strong>Thread Safety:</strong> Logger creation is synchronized on the adapter supplier
-     * to prevent race conditions when multiple threads request the same logger name simultaneously.
+     * <strong>线程安全：</strong>创建过程以 adapterSupplier 作为锁进行同步，
+     * 以避免多线程同时请求同名 Logger 时的竞态问题。
      *
-     * @param name the name of the logger to retrieve; typically a class name or component identifier
-     * @return a logger instance for the specified name; never null
-     * @throws RuntimeException if logger creation fails due to adapter supplier issues
+     * @param name 日志记录器名称；通常使用类名或组件标识
+     * @return 对应名称的日志记录器实例（不返回 null）
      */
     @Override
     public Logger getLogger(String name) {

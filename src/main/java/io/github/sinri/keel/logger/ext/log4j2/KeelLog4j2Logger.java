@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器。
+ * 在 Keel 日志系统中封装实现的 Log4j2 日志记录器。
  *
  * @since 5.0.0
  */
@@ -179,12 +179,12 @@ final class KeelLog4j2Logger extends AbstractLogger {
     }
 
     /**
-     * Adds thread context information to the log event.
+     * 将线程上下文信息写入日志事件。
      * <p>
-     * This method retrieves the current thread's context map from Log4j's
-     * ThreadContext and adds it to the Keel log event as context information.
+     * 本方法从 Log4j2 的 {@link ThreadContext} 获取当前线程的上下文映射，
+     * 并将其作为上下文字段写入 Keel 的日志事件。
      *
-     * @param keelEventLog the log event to add context to
+     * @param keelEventLog 需要补充上下文的日志事件
      */
     private void addThreadContextToLog(Log keelEventLog) {
         try {

@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 
 /**
- * 在 Keel 日志体系下封装实现的 slf4j 体系日志记录服务提供者。
+ * 在 Keel 日志系统中封装实现的 SLF4J 日志记录服务提供者。
  * <p>
  *  <ul>
  *      <li>{@link #getMarkerFactory()} 返回 {@code null}，不支持标记功能</li>
@@ -57,11 +57,12 @@ public class KeelSLF4JServiceProvider implements SLF4JServiceProvider {
     /**
      * 获取标记工厂实例。
      * <p>
-     * 当前实现不支持 SLF4J 标记功能，始终返回 {@code null}。
-     * 这意味着使用 {@link org.slf4j.Marker} 相关的日志方法时，
-     * 标记信息将被忽略。
+     * 当前实现不提供 {@link IMarkerFactory}，始终返回 {@code null}。
+     * <p>
+     * 注意：日志记录器实现仍会在日志方法中接收 {@link org.slf4j.Marker} 参数，
+     * 并将其转换为 Keel 的 classification（分类）信息。
      *
-     * @return {@code null} - 不支持标记功能
+     * @return {@code null} - 不提供 MarkerFactory
      */
     @Override
     public @Nullable IMarkerFactory getMarkerFactory() {

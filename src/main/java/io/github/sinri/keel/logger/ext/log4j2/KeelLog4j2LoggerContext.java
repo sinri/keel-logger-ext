@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器上下文。
+ * 在 Keel 日志系统中封装实现的 Log4j2 日志记录器上下文。
  *
  * @since 5.0.0
  */

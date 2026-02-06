@@ -14,13 +14,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器上下文工厂。
+ * 在 Keel 日志系统中封装实现的 Log4j2 日志记录器上下文工厂。
  * <p>
- * 基于 SPI 的相关使用方式： 在
+ * 基于 SPI 的使用方式：在
  * {@code META-INF/services/org.apache.logging.log4j.spi.LoggerContextFactory}
- * 文件写入本类全名
- * {@code io.github.sinri.keel.logger.log4j2.KeelLog4j2LoggerContextFactory} ，
- * 使得 ServiceLoader 机制下 Log4j2 的 LogManager 会自动加载本类提供日志记录服务体系。
+ * 文件中写入本类全名
+ * {@code io.github.sinri.keel.logger.ext.log4j2.KeelLog4j2LoggerContextFactory}，
+ * 从而使 Log4j2 的 LogManager 通过 ServiceLoader 自动加载本工厂以提供日志记录能力。
  *
  * @since 5.0.0
  */

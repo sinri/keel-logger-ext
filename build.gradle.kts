@@ -1,12 +1,20 @@
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+
 plugins {
     `java-library`
     `maven-publish`
     signing
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 // Project metadata from gradle.properties
 group = property("group") as String
 version = property("version") as String
+
+val versionString = version.toString()
+val isSnapshotVersion = versionString.endsWith("SNAPSHOT")
+val isPreReleaseVersion = versionString.contains(Regex("-[A-Za-z]"))
+val isCentralReleaseVersion = !isSnapshotVersion && !isPreReleaseVersion
 
 val projectName: String by project
 val projectDescription: String by project
@@ -25,7 +33,6 @@ val log4jApiVersion: String by project
 val keelLoggerApiVersion: String by project
 
 repositories {
-    // Internal Nexus repository for dependencies
     maven {
         name = "InternalNexus"
         url = uri(findProperty("internalNexusPublicUrl") as String)
@@ -36,7 +43,6 @@ repositories {
         // Allow insecure protocol if needed (not recommended for production)
         // isAllowInsecureProtocol = false
     }
-
     mavenCentral()
 }
 
@@ -83,7 +89,6 @@ tasks.processResources {
 tasks.test {
     useJUnitPlatform()
     include("io/github/sinri/keel/logger/ext/**/*Test.class")
-    include("io/github/sinri/keel/logger/ext/**/*TestCase.class")
 }
 
 // Configure JavaDoc
@@ -136,30 +141,55 @@ publishing {
     }
 
     repositories {
-        maven {
-            // name = "mixed"
-            if (
-                version.toString().endsWith("SNAPSHOT")
-            ) {
+        if (isSnapshotVersion) {
+            maven {
+                name = "InternalNexusSnapshots"
                 url = uri(findProperty("internalNexusSnapshotsUrl") as String)
                 credentials {
                     username = findProperty("internalNexusUsername") as String
                     password = findProperty("internalNexusPassword") as String
                 }
-            } else if (version.toString().contains(Regex("-[A-Za-z]+"))) {
+            }
+        } else if (isPreReleaseVersion) {
+            maven {
+                name = "InternalNexusReleases"
                 url = uri(findProperty("internalNexusReleasesUrl") as String)
                 credentials {
                     username = findProperty("internalNexusUsername") as String
                     password = findProperty("internalNexusPassword") as String
                 }
-            } else {
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = findProperty("ossrhUsername") as String? ?: System.getenv("OSSRH_USERNAME")
-                    password = findProperty("ossrhPassword") as String? ?: System.getenv("OSSRH_PASSWORD")
-                }
             }
         }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        // Sonatype Central (OSSRH Staging API compatibility service)
+        // https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuring-your-plugin
+        sonatype {
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+        }
+    }
+}
+
+// Prevent accidental publication to Sonatype Central for snapshots / pre-releases.
+// Only pure releases (e.g. 1.0.0) are intended to be published to Central.
+tasks.withType<PublishToMavenRepository>().configureEach {
+    // NOTE: Do NOT access `repository` here; it may be null during task creation.
+    // Use task name instead (e.g. publishMavenJavaPublicationToSonatypeRepository).
+    if (name.contains("ToSonatypeRepository") && !isCentralReleaseVersion) {
+        enabled = false
+    }
+}
+
+// Keep `./gradlew publish` as a one-liner:
+// - SNAPSHOT / pre-release => internal Nexus only
+// - pure release => publish to Sonatype, then close+release staging repository
+tasks.named("publish").configure {
+    if (isCentralReleaseVersion) {
+        finalizedBy("closeAndReleaseStagingRepositories")
     }
 }
 
@@ -169,8 +199,24 @@ signing {
     useGpgCmd()
     // Only sign if not a SNAPSHOT and signing credentials are available
     setRequired({
-        !version.toString().endsWith("SNAPSHOT")
-                && gradle.taskGraph.hasTask("publish")
+        if (isSnapshotVersion) return@setRequired false
+
+        // Require signing when publishing to Sonatype / releasing staging repositories.
+        gradle.taskGraph.allTasks.any { task ->
+            val name = task.name
+            name == "publish" ||
+                    name == "publishToSonatype" ||
+                    name == "closeSonatypeStagingRepository" ||
+                    name == "releaseSonatypeStagingRepository" ||
+                    name == "closeAndReleaseSonatypeStagingRepository" ||
+                    name == "closeStagingRepositories" ||
+                    name == "releaseStagingRepositories" ||
+                    name == "closeAndReleaseStagingRepositories" ||
+                    (name.contains("Sonatype") && (name.startsWith("publish") || name.startsWith("close") || name.startsWith("release")))
+        }
     })
     sign(publishing.publications["mavenJava"])
 }
+
+
+

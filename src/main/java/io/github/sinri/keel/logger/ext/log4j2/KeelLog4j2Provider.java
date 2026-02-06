@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 
 /**
- * 在 Keel 日志体系下封装实现的 Log4j2 体系日志记录器提供者，可以用于 SPI 机制下的服务提供者发现。
+ * 在 Keel 日志系统中封装实现的 Log4j2 日志记录器提供者，可以用于 SPI 机制下的服务提供者发现。
  *
  * @since 5.0.0
  * @deprecated 最新的用法已不需要通过本类实现 SPI；直接以 {@link KeelLog4j2LoggerContextFactory}实现 SPI。
@@ -53,25 +53,23 @@ public class KeelLog4j2Provider extends Provider {
     }
 
     /**
-     * Provides the visible base level for logging.
+     * 提供对外可见的基础日志级别。
      * <p>
-     * Override this method to customize the minimum log level that will be
-     * processed.
+     * 子类可以重写本方法，用于自定义将被处理的最小日志级别（低于该级别的日志将被过滤）。
      *
-     * @return the minimum {@link LogLevel} that will be processed
+     * @return 将被处理的最小 {@link LogLevel}
      */
     protected LogLevel getVisibleBaseLevel() {
         return LogLevel.INFO;
     }
 
     /**
-     * Provides a {@link Supplier} that supplies the {@link LogWriterAdapter} instance.
+     * 提供用于获取 {@link LogWriterAdapter} 实例的 {@link Supplier}。
      *
      * <p>
-     * Override this method to use another {@link LogWriterAdapter} to
-     * record issues.
+     * 子类可以重写此方法以提供自定义的 {@link LogWriterAdapter}，用于输出日志事件。
      *
-     * @return the adapter supplier
+     * @return 适配器的供应者
      */
     protected Supplier<LogWriterAdapter> getAdapterSupplier() {
         return BaseLogWriter::getInstance;
