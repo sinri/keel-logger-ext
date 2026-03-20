@@ -1,5 +1,3 @@
-import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
-
 plugins {
     `java-library`
     `maven-publish`
@@ -31,6 +29,7 @@ val vertxVersion: String by project
 val slf4jApiVersion: String by project
 val log4jApiVersion: String by project
 val keelLoggerApiVersion: String by project
+val jacksonVersion: String by project
 
 repositories {
     maven {
@@ -48,9 +47,14 @@ repositories {
 
 dependencies {
     // Main dependencies
-    implementation("org.slf4j:slf4j-api:$slf4jApiVersion")
-    implementation("org.apache.logging.log4j:log4j-api:$log4jApiVersion")
-    implementation("io.github.sinri:keel-logger-api:$keelLoggerApiVersion")
+    api("org.slf4j:slf4j-api:$slf4jApiVersion")
+    api("org.apache.logging.log4j:log4j-api:$log4jApiVersion")
+    api("io.github.sinri:keel-logger-api:$keelLoggerApiVersion")
+
+    // Temp Fix for maven:com.fasterxml.jackson.core:jackson-core:2.18.2 vulnerable
+    constraints {
+        api("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
+    }
 
     // API dependency (transitive)
     // https://mvnrepository.com/artifact/org.jspecify/jspecify

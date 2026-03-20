@@ -1,5 +1,6 @@
 package io.github.sinri.keel.logger.ext.slf4j;
 
+import io.github.sinri.keel.logger.api.LogLevel;
 import io.github.sinri.keel.logger.api.adapter.BaseLogWriter;
 import io.github.sinri.keel.logger.api.adapter.LogWriterAdapter;
 import org.jspecify.annotations.NullMarked;
@@ -20,7 +21,7 @@ public class KeelSlf4jLoggerFactoryTest {
             }
         };
         Supplier<LogWriterAdapter> adapterSupplier = () -> adapter;
-        KeelSlf4jLoggerFactory factory = new KeelSlf4jLoggerFactory(adapterSupplier, null, true);
+        KeelSlf4jLoggerFactory factory = new KeelSlf4jLoggerFactory(adapterSupplier, LogLevel.INFO, null, true);
 
         Logger logger = factory.getLogger("test-logger");
         Assertions.assertNotNull(logger);

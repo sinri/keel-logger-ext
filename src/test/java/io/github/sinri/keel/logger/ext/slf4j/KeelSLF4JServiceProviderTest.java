@@ -16,8 +16,8 @@ public class KeelSLF4JServiceProviderTest {
         Assertions.assertNotNull(provider.getLoggerFactory());
         Assertions.assertInstanceOf(KeelSlf4jLoggerFactory.class, provider.getLoggerFactory());
 
-        Assertions.assertNull(provider.getMarkerFactory());
-        Assertions.assertNull(provider.getMDCAdapter());
-        Assertions.assertEquals("2.0.17", provider.getRequestedApiVersion());
+        Assertions.assertNotNull(provider.getMarkerFactory());
+        Assertions.assertNotNull(provider.getMDCAdapter());
+        Assertions.assertEquals(KeelSLF4JServiceProvider.REQUESTED_API_VERSION, provider.getRequestedApiVersion());
     }
 }

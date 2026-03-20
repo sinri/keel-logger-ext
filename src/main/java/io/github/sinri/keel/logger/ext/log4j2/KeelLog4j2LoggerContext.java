@@ -68,6 +68,10 @@ final class KeelLog4j2LoggerContext implements LoggerContext {
 
     @Override
     public ExtendedLogger getLogger(String name, MessageFactory messageFactory) {
+        if (verbose && messageFactory != null) {
+            System.out.println("Keel Logging for log4j ignores custom MessageFactory ("
+                    + messageFactory.getClass().getName() + ") for logger [" + name + "]");
+        }
         return getLogger(name);
     }
 
