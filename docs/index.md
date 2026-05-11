@@ -2,7 +2,15 @@
 
 Use loggers as Log4j and Slf4j Protocol but implemented based on Keel Logger API.
 
-Current Version: 5.0.1
+Current Version: 5.0.2
+
+## 5.0.2
+
+- Human-Oriented Documents
+  - [Developer Guide](./5.0.2/developer-guide.md)
+  - [Changes Since 5.0.1](./5.0.2/changes-since-5.0.1.md)
+- AI-Oriented Documents
+  - [AI Coding Guide](./5.0.2/ai-coding-guide.md)
 
 ## 5.0.1
 
